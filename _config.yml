@@ -1,0 +1,53 @@
+# Basic
+title: iOS init
+subtitle: 程序让这个世界更美好
+welcome_message: <a href="http://www.zaih.com/mentor/84894970/topic/29873289/" target="_blank">One to One</a>
+description: 嗨，我是方一雄，这是我的 iOS 视频教程小站，欢迎您的光临。
+creator: <a href="http://iosinit.com">@方一雄</a>
+
+url: "http://vno.onevcat.com"
+
+permalink: /:year/:month/:title/
+
+# Format
+highlighter: plain
+markdown: redcarpet
+redcarpet:
+  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript", tables]
+
+# supported colors: blue, green, purple, red, orange or slate. If you need clear, leave it empty.
+cover_color: blue
+
+# The blog button should not be removed.
+blog_button:
+    title: 文章
+    description: Visit blog
+
+# Navigation buttons in the front page.
+nav:
+    - {title: 视频, description: Videos, url: 'http://'}
+    - {title: 项目, description: My Project, url: 'http://project.iosinit.com'}
+    - {title: 关于, description: A button, url: 'http://about.iosinit.com'}
+
+# Pagination
+gems: [jekyll-paginate]
+paginate: 10
+paginate_path: "page/:num/"
+
+# Comment
+comment:
+    disqus: vno-jekyll
+    # duoshuo: 
+    
+# Social
+social:
+    weibo: fangyixiong
+    github: fangyixiong
+    twitter: fangyixiong
+    gplus: 
+    mail: hide.fyx@gmail.com
+
+# Google Analytics
+ga:
+    # id: your_ga_id
+    # host: your_host

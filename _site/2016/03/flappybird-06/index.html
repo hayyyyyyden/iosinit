@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <title>「从零开始」做一个 FlappyBird 那样的游戏 第6节：检测物体的碰撞</title>
+  <meta name="description" content="原文地址：「从零开始」做一个 FlappyBird 那样的游戏 第6节：检测物体的碰撞">
+  <meta name="author" content="Wei Wang">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="「从零开始」做一个 FlappyBird 那样的游戏 第6节：检测物体的碰撞">
+  <meta name="twitter:description" content="原文地址：「从零开始」做一个 FlappyBird 那样的游戏 第6节：检测物体的碰撞">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="「从零开始」做一个 FlappyBird 那样的游戏 第6节：检测物体的碰撞">
+  <meta property="og:description" content="原文地址：「从零开始」做一个 FlappyBird 那样的游戏 第6节：检测物体的碰撞">
+  
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+  <link href="/assets/images/favicon.png" rel="shortcut icon" type="image/png">
+  
+  <link rel="stylesheet" href="/css/main.css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="canonical" href="http://vno.onevcat.com/2016/03/flappybird-06/">
+  <link rel="alternate" type="application/rss+xml" title="iOS init" href="http://vno.onevcat.com/feed.xml">
+  
+  <meta name="google-site-verification" content="1-1ZlHoRvM0T2FqPbW2S-qLgYXN6rsn52kErlMPd_gw" />
+  
+</head>
+
+
+  <body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+    
+    <header class="panel-cover panel-cover--collapsed" style="background-image: url('/assets/images/background-cover.jpg')">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/#blog" title="前往 iOS init 的主页" class="blog-button"><img src="/assets/images/avatar.jpg" width="80" alt="iOS init logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/#blog" title="link to homepage for iOS init" class="blog-button">iOS init</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">程序让这个世界更美好</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">嗨，我是方一雄，这是我的 iOS 视频教程小站，欢迎您的光临。</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+        
+        <p class="panel-cover__description"><a href="http://www.zaih.com/mentor/84894970/topic/29873289/" target="_blank">One to One</a></p>
+        
+        
+        <div class="navigation-wrapper">
+          <div>
+            <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                <li class="navigation__item"><a href="/#blog" title="Visit blog" class="blog-button">文章</a></li>
+                
+                  <li class="navigation__item"><a href="http://" target="_blank" title="Videos">视频</a></li>
+                
+                  <li class="navigation__item"><a href="http://project.iosinit.com" target="_blank" title="My Project">项目</a></li>
+                
+                  <li class="navigation__item"><a href="http://about.iosinit.com" target="_blank" title="A button">关于</a></li>
+                
+              </ul>
+            </nav>
+          </div>
+          
+          <div><nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  
+  <!-- Weibo -->
+  <li class="navigation__item">
+    <a href="http://weibo.com/fangyixiong" title="@fangyixiong 的微博" target="_blank">
+      <i class='social fa fa-weibo'></i>
+      <span class="label">Weibo</span>
+    </a>
+  </li>
+  
+
+  
+  <!-- Github -->
+  <li class="navigation__item">
+    <a href="https://github.com/fangyixiong" title="@fangyixiong 的 Github" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+  
+  
+  
+  <!-- Twitter -->
+  <li class="navigation__item">
+    <a href="http://twitter.com/fangyixiong" title="@fangyixiong" target="_blank">
+      <i class='social fa fa-twitter'></i>
+      <span class="label">Twitter</span>
+    </a>
+  </li>
+  
+
+  
+
+  <!-- RSS -->
+  <li class="navigation__item">
+    <a href="/feed.xml" rel="author" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+  
+  <!-- Email -->
+  <li class="navigation__item">
+    <a href="mailto:hide.fyx@gmail.com" title="Contact me">
+      <i class='social fa fa-envelope'></i>
+      <span class="label">Email</span>
+    </a>
+  </li>
+  
+
+  </ul>
+</nav>
+</div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="panel-cover--overlay cover-blue"></div>
+    
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2016-03-02 07:19:30 +0800" itemprop="datePublished" class="post-meta__date date">2016-03-02</time> &#8226; <span class="post-meta__tags tags"></span>
+    </div>
+    <h1 class="post-title">「从零开始」做一个 FlappyBird 那样的游戏 第6节：检测物体的碰撞</h1>
+  </header>
+
+  <section class="post">
+    <p>原文地址：<a href="http://iOSinit.com/flappybird-06">「从零开始」做一个 FlappyBird 那样的游戏 第6节：检测物体的碰撞</a></p>
+
+<p>相关视频地址：<a href="http://study.163.com/course/introduction/1685005.htm">网易云课堂</a></p>
+
+<p>嗨，大家好，我是方一雄。欢迎大家继续收看<a href="http://study.163.com/course/introduction/1685005.htm">「从零开始」做一个 FlappyBird 那样的游戏</a> 这一系列教学视频。</p>
+
+<p>在本节的视频中，你将会学习如何检测游戏中物体的碰撞。</p>
+
+<h2>理论讲解</h2>
+
+<hr>
+
+<h3>碰撞检测</h3>
+
+<p>在上节课的视频中，我们已经完成了实现「碰撞检测」的准备工作，那就是给主角、障碍物和地面增加了碰撞体积。现在我们要做的就是告诉系统的物理引擎，当两个物品碰撞的时候，通知我们。这种通知机制在苹果的编程语言中，就叫做<strong>代理（Delegate）</strong>。</p>
+
+<p>那为了实现这个代理，我们首先要遵守一个名叫<code>SKPhysicsContactDelegate</code>（意思就是系统物理引擎碰撞的代理）的<strong>协议（Protocol）</strong>。然后我们把游戏的<code>场景</code>本身设置为物理世界(<code>PhysicsWorld</code>)的代理，这样我们就会在系统的物理引擎检测到碰撞后得到通知。</p>
+
+<p>由于这个课程的目的不是专注于编程知识的讲解，所以如果你不理解这个所谓的「代理」和「协议」是什么，可以暂时先放下，跟着做下来，之后再去查找相关的概念。</p>
+
+<p>这个通知就是我们屏幕上列出来的这个方法，名字叫做<code>didBeginContact</code>，意思就是开始碰撞。</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">func didBeginContact(碰撞双方: SKPhysicsContact) {
+
+   let 被撞对象 = 碰撞双方.bodyA.categoryBitMask == 物理层.游戏角色 ? 碰撞双方.bodyB : 碰撞双方.bodyA
+
+   if 被撞对象.categoryBitMask == 物理层.地面 {
+       撞击了地面 = true
+   }
+
+   if 被撞对象.categoryBitMask == 物理层.障碍物 {
+       撞击了障碍物 = true
+   }
+
+}
+</code></pre></figure>
+<p>我们注意到，这个方法中有一个类为<code>SKPhysicsContact</code>的参数，我们叫它<code>碰撞双方</code>，它有两个属性<code>bodyA</code>和<code>bodyB</code>分别代表发生碰撞的两个物体。</p>
+
+<p>这里有一个棘手的问题是，这里的顺序是不固定的。也就是说，当主角和障碍物发生碰撞的时候，<code>bodyA</code>可能是<code>主角</code>，也可能是<code>障碍物</code>。主角和地面相撞的时候也是同样的情况。</p>
+
+<p>所以第一行代码的意思就是我们要区分主角和它撞到的东西。那因为我们的游戏设计成，要么是主角撞到障碍物，要么是主角撞到地面。所以碰撞的双方中一定有一个是<code>主角</code>。</p>
+
+<p>所以如果<code>bodyA</code>的类别是<code>游戏角色</code>，那它一定是主角，那么<code>被撞对象</code>一定是<code>bodyB</code>；反之，那么<code>bodyB</code>就是主角，那么<code>bodyA</code>就是<code>被撞对象</code>。</p>
+
+<p>区分完<code>主角</code>和<code>被撞对象</code>之后，我们知道了<code>被撞对象</code>要不就是<code>障碍物</code>，要不就是<code>地面</code>。所以接下来的代码就是要再来分别处理<code>撞到障碍物</code>和<code>撞到地面</code>这两种情况了。在这里，我们的做法是分别设置一个布尔值的变量作为标记来代表这两种情况。然后在「游戏更新下一帧」（即<code>update</code>那个方法）的时候根据不同的情况来做一些相关的事情。</p>
+
+<h3>游戏状态</h3>
+
+<h4>不同的游戏状态：</h4>
+
+<p>在我们进入 Demo 之前还有一件事需要大家理解，那就是「游戏状态」。</p>
+
+<p>我们在编写游戏的时候，通常会把游戏分为不同的状态。截至目前，我们只有一个状态，那就是<code>游戏</code>状态，在这个状态下，我们的主角在天空不断地飞翔。</p>
+
+<p>那如果我们的主角撞上障碍物之后应该怎么办呢？</p>
+
+<ul>
+<li>游戏中</li>
+<li>跌落</li>
+<li>显示分数</li>
+</ul>
+
+<p>这个时候我们就要切换到一个新的游戏状态，这时主角就会向下坠落，这个状态就叫<code>跌落</code>。然后当主角落到地面上的时候，我们要再切换一个状态来给玩家显示本次游戏的得分，之后会教大家如何计分，我们这里就先把这个状态叫做<code>显示分数</code>。</p>
+
+<p>现在的问题是，我们要如何来跟踪这些不同的状态呢？</p>
+
+<p>你可以会想，我可以设置几个布尔值来进行标记，是否跌落，是否撞击了地面等等。这没错，但是因为在之后我们可能还会增加更多的游戏状态，所以使用一个枚举来管理可能是一个更好的方法。</p>
+
+<p>就像这个代码显示的一样，我们把所有可能的游戏状态都列举出来，包括一些我们暂时还用不上的状态。 </p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">enum 游戏状态 {
+    case 主菜单
+    case 教程
+    case 游戏
+    case 跌落
+    case 显示分数
+    case 结束
+}
+</code></pre></figure>
+<h4>对于每一个状态</h4>
+
+<p>确定了各个游戏状态之后，我们可以根据不同的游戏状态来组织和优化我们的代码。</p>
+
+<h5>点击屏幕时候有不同的行为</h5>
+
+<p>比如，当用户点击屏幕的时候，如果我们是在「游戏」状态，那跟之前一样，主角要<code>向上飞一下</code>，但是如果是在「跌落」的状态下，用户再点击屏幕我们就不希望主角再飞了，而是让用户静静地看着主角下落的动画就好了。</p>
+
+<h5>游戏每一帧更新的时候发生不同的事情</h5>
+
+<p>比如，在<code>update</code>（更新）这个方法中，如果是在「游戏」状态，那就跟之前一毛一样；但是如果是在「跌落」的状态下，我们就不希望前景和障碍物再持续地移动来制造主角向前飞的假象了对吧，因为这时理论上主角已经「死」了，不能前进了。</p>
+
+<p>综上可以看到，根据不同的游戏状态来组织我们的代码是很有帮助的。</p>
+
+<h5>在不同游戏状态间切换的特效</h5>
+
+<p>这样做的另外一个好处在于，当我们在不同的游戏状态间切换的时候，我们可以创建一个「切换到xx状态」的方法来组织我们的代码，逻辑会更清晰。</p>
+
+<p>比如，当我们的主角撞到障碍物的时候，我们要切换到「跌落」的状态，那我们就可以写一个名叫<code>切换到跌落状态()</code>这样的方法，在这个方法里，我们首先把当前游戏状态改为「跌落」，然后我们可能想播放一个跌落的声音来告诉玩家发生了什么，那我们就可以把这个切换相关的代码都写在下面。</p>
+
+<p>用这种方式组织代码逻辑会非常清晰，既方便阅读也更易于日后的维护，在我们的示范中就会采用这种方式。</p>
+
+<h2>Demo 演示</h2>
+
+<p>图文 TODO，请先参考相关视频（）</p>
+
+  </section>
+</article>
+
+<section class="read-more">
+   
+   
+   <div class="read-more-item">
+       <span class="read-more-item-dim">最近的文章</span>
+       <h2 class="post-list__post-title post-title"><a href="/2016/03/weekend-workshop/" title="link to 「周末编程趴」2小时做一个手机游戏送给她">「周末编程趴」2小时做一个手机游戏送给她</a></h2>
+       <p class="excerpt">报名地址：请点击 这里送Ta一款你做的手机游戏？ 两小时内做一个类似 FlappyBird 但专属某人的游戏。小情侣们的各种节日、纪念日一波接一波的来。最近也很快将迎来火向星座的生日聚集月。礼物准备没？！啥？还是鲜花？还是小熊玩具？拜托，有点心意好么……如果你是男盆友/女盆友，在特殊的日子送出一个为Ta，亲手制作的专属小游戏，是不是听起来狂拽酷炫屌炸天，乖乖把对方领回家的节奏啊！如果你是老公/老婆，在携手度过的漫漫岁月中，是否可以来电浪漫的小插曲？唤起对方快要沉睡的爱。如果你是单身狗，来来...&hellip;</p>
+       <div class="post-list__meta"><time datetime="2016-03-04 08:22:58 +0800" class="post-list__meta--date date">2016-03-04</time> &#8226; <span class="post-list__meta--tags tags">flappybird</span><a class="btn-border-small" href=/2016/03/weekend-workshop/>继续阅读</a></div>
+   </div>
+   
+   
+   
+   
+   <div class="read-more-item">
+       <span class="read-more-item-dim">更早的文章</span>
+       <h2 class="post-list__post-title post-title"><a href="/2016/02/flappybird-05/" title="link to 「从零开始」做一个 FlappyBird 那样的游戏 第5节：碰撞体积">「从零开始」做一个 FlappyBird 那样的游戏 第5节：碰撞体积</a></h2>
+       <p class="excerpt">原文地址：第5节：碰撞体积相关视频地址：网易云课堂嗨，大家好，我是方一雄。欢迎大家继续收看「从零开始」做一个 FlappyBird 那样的游戏 这一系列教学视频。在本节的视频中，你将会学习添加物品的碰撞体积。刚刚这个视频展示的是让我们完成本节之后的效果。看的事情请注意游戏中主角，障碍物和地面周围的蓝色的线条，这些就是我们在本节课上要定义的物体的碰撞体积。理论讲解总的目标使用苹果的游戏框架 Sprite Kit 来处理碰撞检测我们使用 Sprite Kit 的一个很大的优点就是它拥有内置的物...&hellip;</p>
+       <div class="post-list__meta"><time datetime="2016-02-19 17:15:49 +0800" class="post-list__meta--date date">2016-02-19</time> &#8226; <span class="post-list__meta--tags tags">flappybird</span><a class="btn-border-small" href=/2016/02/flappybird-05/>继续阅读</a></div>
+   </div>
+   
+</section>
+
+<section class="post-comments">
+  
+    <div id="disqus_thread"></div>
+    <script>
+    
+    var disqus_config = function () {
+        this.page.url = "http://vno.onevcat.com/2016/03/flappybird-06/";
+        this.page.identifier = "/2016/03/flappybird-06/";
+    };
+
+    var disqus_shortname = 'vno-jekyll';
+    
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>要查看<a href="http://disqus.com/?ref_noscript"> Disqus </a>评论，请启用 JavaScript</noscript>
+    
+  
+  
+  
+  
+</section>
+
+
+            <section class="footer">
+    <footer>
+    	<span class="footer__copyright">本站点采用<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享 署名-非商业性使用-相同方式共享 4.0 国际 许可协议</a></span>
+        <span class="footer__copyright">由 <a href="https://jekyllrb.com">Jekyll</a> 于 2016-09-01 生成，感谢 <a href="https://www.digitalocean.com/?refcode=5a864881b7fb">Digital Ocean</a> 为本站提供稳定的 VPS 服务</span>
+        <span class="footer__copyright">本站由 <a href="http://iosinit.com">@方一雄</a> 创建，采用 <a href="https://github.com/onevcat/vno-jekyll">Vno - Jekyll</a> 作为主题，您可以在 GitHub 找到<a href="https://github.com/FangYiXiong/iosinit">本站源码</a> - &copy; 2016</span>
+    </footer>
+</section>
+
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript" src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script type="text/javascript" src="/js/main.js"></script>
+
+
+
+    
+  </body>
+
+</html>

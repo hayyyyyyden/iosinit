@@ -1,0 +1,1843 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>iOS init</title>
+    <description>嗨，我是方一雄，这是我的 iOS 视频教程小站，欢迎您的光临。</description>
+    <link>http://vno.onevcat.com/</link>
+    <atom:link href="http://vno.onevcat.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Thu, 01 Sep 2016 00:36:44 +0800</pubDate>
+    <lastBuildDate>Thu, 01 Sep 2016 00:36:44 +0800</lastBuildDate>
+    <generator>Jekyll v3.1.1</generator>
+    
+      <item>
+        <title>「从零开始」做一个水果忍者那样的游戏（Scene Kit 基础教程）第 5 节：粒子系统</title>
+        <description>&lt;p&gt;原文：&lt;a href=&quot;https://www.raywenderlich.com/128745/scene-kit-tutorial-swift-part-5-particle-systems&quot;&gt;Scene Kit Tutorial with Swift Part 5: Particle Systems&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注：这是&lt;a href=&quot;https://www.raywenderlich.com/store/3d-ios-games-by-tutorials&quot;&gt;《3D iOS 游戏教程》&lt;/a&gt;这本书中一个章节的缩写版，来让您可以来领略一下这本书的内容。希望您喜欢！&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-Thumb.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;这一教程将向你展示如何使用苹果最新的游戏框架－SceneKit，来创建你的第一个 3D 游戏。&lt;/p&gt;
+
+&lt;p&gt;在这个一共 5 节的系列教程中，你将会创建你的第一个 SceneKit 游戏：&lt;strong&gt;几何忍者（GeometryFighter）&lt;/strong&gt;！这是一个类似于&lt;strong&gt;&lt;a href=&quot;https://itunes.apple.com/cn/app/fruit-ninja/id362949845?mt=8&quot;&gt;水果忍者&lt;/a&gt;&lt;/strong&gt;那样的游戏，你来摧毁不断涌上屏幕的几何体来满足自己内心的破坏欲:]&lt;/p&gt;
+
+&lt;p&gt;下面是本系列教程文章的导航及简介：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-01&quot;&gt;第 1 节&lt;/a&gt;，你将会学习到如何新建一个空白的 SceneKit 工程做为一个好的开始。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-02&quot;&gt;第 2 节&lt;/a&gt;，开始编写游戏，并学习有关 SceneKit 节点的知识。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-03&quot;&gt;第 3 节&lt;/a&gt;，学习如何使用 SceneKit 内置的物理引擎来移动你的几何体。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-04&quot;&gt;第 4 节&lt;/a&gt;，学习有关 SceneKit 中有关渲染循环的知识，并让你的几何体不断重生。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在最后的&lt;a href=&quot;http://iOSinit.com/scenekit-05&quot;&gt;第 5 节&lt;/a&gt;中，你将学习如何将一些非常酷的粒子效果添加到游戏中。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;在&lt;a href=&quot;http://iOSinit.com/scenekit-04&quot;&gt;上一节&lt;/a&gt;的学习中，我们学习有关 SceneKit 中有关渲染循环的知识，并让你的几何体不断重生。&lt;/p&gt;
+
+&lt;p&gt;本节是第五节，在本节的教程中，你将学习如何将一些非常酷的粒子效果添加到游戏中。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;本篇教程从上一节教程结束的地方开始。如果你没有跟上，不要着急 ———— 你可以从这里下载本次教程的&lt;a href=&quot;https://github.com/FangYiXiong/GeometryFighter/archive/part-4-finished.zip&quot;&gt;开始程序包&lt;/a&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;开始&lt;/h2&gt;
+
+&lt;p&gt;想象我们在电影院里，手捧爆米花；屏幕上放映的是《速度与激情》，一个坏人驾驶着一辆高性能跑车，咆哮着冲向一辆油罐车。然后砰的一声，油罐车爆炸，炸出了一片死亡般的火海。好棒！:]&lt;/p&gt;
+
+&lt;p&gt;想象一下，如果情节不变，只是把爆炸这部分去掉；你几乎马上可以感受到迷茫在全世界的影迷身上的那种失望的情绪。:[&lt;/p&gt;
+
+&lt;p&gt;就像好莱坞的大片一样，我们的游戏需要用特效来增加刺激。在游戏开发中我们使用&lt;strong&gt;粒子系统（particle systems）&lt;/strong&gt;来制作这些特效。我们可以使用粒子系统来制作大量的特效，从移动的星星，到燃烧的火箭；从雨雪天气，到金属飞溅 —— 还有，没错，大量爆炸的火球！&lt;/p&gt;
+
+&lt;p&gt;现在让我们来看一下如何把这些精巧的特效添加到几何忍者中。&lt;/p&gt;
+
+&lt;h2&gt;粒子系统 SCNParticleSystem&lt;/h2&gt;
+
+&lt;p&gt;在 Scene Kit 中，我们使用 &lt;code&gt;SCNParticleSystem&lt;/code&gt; 这个类来管理场景图中粒子的创建、动画和移除。&lt;/p&gt;
+
+&lt;p&gt;一个&lt;strong&gt;粒子&lt;/strong&gt;本质来说就是一张小的图片。粒子系统并不会向场景图中添加任何粒子，所以我们没法直接对粒子进行操作 —— 粒子系统管理所有粒子以及它们的长相、大小和位置。&lt;/p&gt;
+
+&lt;p&gt;尽管如此，我们可以调整各种属性，来给粒子系统施加影响，比如：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;外观 Appearance&lt;/strong&gt;：每一个粒子都可以显示为一个单独的图片或者一组连续的动图（即动画）。你可以调整它的大小、颜色、融合模式以及其他一些显示参数。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;寿命 Life Span&lt;/strong&gt;：粒子系统使用一个名叫&lt;strong&gt;粒子发射器（particle emitter）&lt;/strong&gt;的东西来生成每一个粒子。粒子的寿命（lifespan）决定了这个粒子能在场景中显示多久。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;发射器的行为 Emitter behavior&lt;/strong&gt;：你可以修改发射器的不同参数，来调整比如粒子应该在哪里生成，或生成的速率等问题。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;变化度 Variation&lt;/strong&gt;：在粒子系统中调整变化度（variations）可以让你的粒子生成地更随机，或者更不随机。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;运动 Movement&lt;/strong&gt;：用来调整粒子生成后如何运动。粒子系统使用一个简化的物理模型来提高性能，但是粒子仍然会在物理引擎的影响下相互作用。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;你可以在随书的本章的 &lt;strong&gt;/starter/Geometry Fighter/&lt;/strong&gt; 目录下找到本节的起始程序包，或者从上节教程完成后的&lt;a href=&quot;https://github.com/FangYiXiong/GeometryFighter/archive/part-4-finished.zip&quot;&gt;程序&lt;/a&gt;继续。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;粒子系统编辑器&lt;/h2&gt;
+
+&lt;p&gt;在向游戏中添加粒子系统之前，我们需要新建一个组来把粒子系统相关的文件组织在一起，来保持工程文件的整洁。右键单击 &lt;strong&gt;GeometryFighter&lt;/strong&gt; 这个组，然后选择 &lt;strong&gt;New Group&lt;/strong&gt;，如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14646704718746.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;把这个新的组命名为&lt;strong&gt;粒子&lt;/strong&gt;。右键单击这个新组，选择 &lt;strong&gt;New File&lt;/strong&gt;，选择 &lt;strong&gt;iOS\Resource\SceneKit Particle System&lt;/strong&gt; 这个模版，点击右下角的 &lt;strong&gt;Next&lt;/strong&gt;：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14646708028579.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;在下一个屏幕上，选择 &lt;strong&gt;Fire&lt;/strong&gt; 这个模版，然后单击 &lt;strong&gt;Next&lt;/strong&gt;：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-particleSystemFire.png&quot; alt=&quot;particleSystemFire&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;把这个文件命名为&lt;strong&gt;轨迹.scnp&lt;/strong&gt;，然后单击 &lt;strong&gt;Create&lt;/strong&gt;。完成之后，你应该能看到下面这张图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14652877898650.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;好热！:] 来跟 Xcode 内置的粒子系统编辑器打个招呼吧。&lt;/p&gt;
+
+&lt;p&gt;下面是对应上图编号的每一个部分的简单说明：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;中心区&lt;/strong&gt;：这里是例子系统的视觉展示区域。你可以用它来预览最终完成后的效果。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;手势控制&lt;/strong&gt;：这里可以用手势来空值摄像头的角度；同之前在场景中移动摄像头的操作类似。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;暂停/播放按钮&lt;/strong&gt;：用来暂停例子系统的模拟，观察更多的细节。暂停的时候，暂停按钮会变成播放按钮用来继续模拟。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;重置按钮&lt;/strong&gt;：用来让粒子系统回到最初的状态。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;摄像头重置按钮&lt;/strong&gt;：用来把摄像头重置到最初的状态。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;颜色按钮&lt;/strong&gt;：用来调节编辑器的背景颜色。比如，在一个黑色的背景下会更容易观察雪花。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;粒子系统的属性&lt;/strong&gt;：选择属性检查器，这里有大量的属性供我们调整，马上你就会学到。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;配置轨迹的粒子系统&lt;/h2&gt;
+
+&lt;p&gt;在这一部分，我们来深度地看一下编辑器右边的属性栏。看这一部分的时候，请把对应截图来把你自己相应部分的数值改成一样的。&lt;/p&gt;
+
+&lt;p&gt;修改每一个属性的时候注意一下左边的预览视图。你将会看到每一个属性是怎么影响粒子系统的行为的。过后，你要使用这个粒子系统来给生成的几何体添加下落的轨迹特效。&lt;/p&gt;
+
+&lt;h3&gt;发射器属性&lt;/h3&gt;
+
+&lt;p&gt;所有的粒子都从粒子发射器中生成。下面是发射器的属性：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14652961602576.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Birth rate&lt;/strong&gt;：控制粒子的发射速率。把这个设为 25，表示希望粒子引擎每秒钟生成 25 个粒子。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Warmup duration&lt;/strong&gt;：模拟器渲染粒子前的准备时间。当我们希望显示一整个屏幕的粒子而不是等着粒子慢慢出现的时候，会用到这个。把这一项设置为 0，这样我们可以从一开始观察模拟的过程。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Location&lt;/strong&gt;：指定粒子出现的位置（相对于几何体来说）。把这一项设为 &lt;strong&gt;Vertex（最高点）&lt;/strong&gt;，意味着粒子将使用几何体的最高点作为它出现的位置。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Emission space&lt;/strong&gt;：发射的粒子所在的空间。把这一项设为 &lt;strong&gt;World Space（世界空间）&lt;/strong&gt;，这样发射的粒子就存在于整个场景之中，而不是物体节点的本地空间内。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Direction mode&lt;/strong&gt;：控制生成的粒子如何运动；把这一项设置为 &lt;strong&gt;Constant（固定）&lt;/strong&gt;，让所有发射的粒子都向同一个方向运动。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Direction&lt;/strong&gt;：当上面选的是 Constant 时，这里用来指定方向的向量。把这个设置为 (x: 0, y: 0, z:0)，方向为空。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Spreading angle&lt;/strong&gt;：让生成的粒子的发射角度随机化。把这个设为 0º，那么粒子就会精确地沿着刚才设置的方向运动。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Initial angle&lt;/strong&gt;：粒子发射时的角度。把这个设为 0º，因为之前设置的方向为空的时候，这里设置什么都无所谓。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Shape&lt;/strong&gt;：发射器的形状。把这个设置为 &lt;strong&gt;Sphere（球形）&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Shape radius&lt;/strong&gt;：这个选项的意义取决于上面选择的形状。对于一个球形的发射器来说，这个代表球体的大小。把这个设为 0.2，这个大小刚好够用。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注：注意到很多属性都有两个输入区域，其中一个旁边带有一个 Δ 标志。第一个代表基础值，另一个 Δ 这个代表变化值。每次一个粒子生成的时候，都会使用一个随机的值，区间为 基础值-Δ值 到 基础值+Δ值 之间。这个目的就是给这些属性添加一些随机性。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3&gt;模拟器属性&lt;/h3&gt;
+
+&lt;p&gt;模拟器的属性用来管理粒子在整个生命周期的运动。我们可以在不使用物理引擎直接控制粒子的运动：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14652995771383.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Life span&lt;/strong&gt;：指定粒子的生命周期，以秒为单位。设为 1，那么一个粒子将只存活 1 秒钟的时间。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Linear velocity&lt;/strong&gt;：指定发射的粒子的线速度。设为 0，这样发射的粒子没有任何线速度。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Angular velocity&lt;/strong&gt;：指定发射粒子的角速度。也设为 0，这样粒子发射出来后也不会旋转。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Acceleration&lt;/strong&gt;：指定生成后的粒子受到的力的作用。把这个设置为 (x: 0, y: -5, z: 0)，这是一个向下的向量，用来模拟一个比较弱的重力的作用。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Speed factor&lt;/strong&gt;：模拟粒子的速度乘数。设为 1，模拟器将以正常的速度运行。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Stretch factor&lt;/strong&gt;：拉伸乘数。粒子在运动方向上的拉伸的乘数。把这个设为 0，保持粒子的图片不被拉伸。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;图像属性&lt;/h3&gt;
+
+&lt;p&gt;图像的属性用来控制粒子的显示方面的特性。同时还掌控着例子如何随着时间来改变外表：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14653027833135.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Image&lt;/strong&gt;：指定粒子渲染时使用的图片。选择 &lt;strong&gt;CircleParticle.png&lt;/strong&gt;， 指定粒子初始的形状。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Color&lt;/strong&gt;：设置指定图片的基础色调。把这项设置为 &lt;strong&gt;White&lt;/strong&gt;，给粒子系统一个白色的基础色。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Animate color&lt;/strong&gt;：粒子是否随时间改变颜色。取消勾选这一项，因为我们的粒子不需要变色。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Color variation&lt;/strong&gt;：给粒子的颜色增加一点随机性。设置为 (h: 0, s: 0, b: 0, a: 0)，因为我们的颜色不变。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Size&lt;/strong&gt;：指定例子的大小。设为 0.1，这样发射出来的粒子尺寸会很小。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;图像序列属性&lt;/h3&gt;
+
+&lt;p&gt;为了给粒子创建连续的动图，我们把动画的每一帧放在一个图片的网格里（就像游戏中的精灵网格一样）。然后粒子发射器就会使用这个网格图片。图像序列属性让我们可以调整粒子的基本动画属性：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14653905025170.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Initial frame&lt;/strong&gt;：设置动画的初始帧。网格的左上角代表第 0 帧。由于我们只使用一张图片，把这一项设置为 0。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Frame rate&lt;/strong&gt;：控制动画的每秒帧率。由于这个只在有多帧的动画时有用，这里我们设为 0。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Animation&lt;/strong&gt;：指定动画序列的行为。&lt;strong&gt;Repeat&lt;/strong&gt; 代表循环播放动画， &lt;strong&gt;Clamp&lt;/strong&gt; 代表只播放一次，&lt;strong&gt;Auto Reverse&lt;/strong&gt; 代表从头播放到尾，然后再反过来。这里选择什么都无所谓，原因同上。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Dimensions&lt;/strong&gt;：指定动画网格的行数和列数。由于我们只有一张图片，把两个都设为 1。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;渲染属性&lt;/h3&gt;
+
+&lt;p&gt;渲染属性定义了粒子如何渲染：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14653910021882.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Blending&lt;/strong&gt;：指定渲染粒子到场景时的混合模式。把这一项设置为 &lt;strong&gt;Alpha&lt;/strong&gt;，它将使用图片本身的 alpha 通道信息来做透明化。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Orientation&lt;/strong&gt;：控制粒子的旋转方向。把这个设置为 &lt;strong&gt;Billboard screen-aligned&lt;/strong&gt;，它将把粒子的平面一直面向摄像头，所以玩家就不会注意到其实粒子就是个平面图像。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Sorting&lt;/strong&gt;：设置粒子渲染的排序模式。这一项和第一项的混合模式一道起作用。把这一项设置为 &lt;strong&gt;None&lt;/strong&gt;，那么粒子系统就不会使用排序。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Lighting&lt;/strong&gt;：控制 SceneKit 的灯光系统会不会影响粒子。取消勾选这一项，那么粒子就会忽略灯光的影响。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;物理属性&lt;/h3&gt;
+
+&lt;p&gt;这一栏是物理引擎模拟相关的选项：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14653915590320.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Affected by gravity&lt;/strong&gt;：是否受重力的影响。不勾选这一项，我们不希望粒子系统受到重力的作用。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Affected by physics fields&lt;/strong&gt;：是否受到物理场的作用。不勾选这一项，我们不希望粒子系统受到物理场的作用。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Die on Collision&lt;/strong&gt;：是否允许粒子与其他物体碰撞并消亡。不勾选这一项，我们不希望粒子与其他物体发生碰撞。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Physics Properties&lt;/strong&gt;：物理模拟过程中一些基本属性的设置。这里我们一切保持默认值，因为我们并没有启用物理引擎对粒子系统的影响。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;生命周期属性&lt;/h3&gt;
+
+&lt;p&gt;控制整个粒子系统的生命周期，即寿命：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14653920687101.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Emission Duration&lt;/strong&gt;：粒子发射器作用的时间。设为 1，代表粒子发射器会作用 1 秒钟的时间。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Idle Duration&lt;/strong&gt;：循环的粒子系统会激活发射器一段时间，然后闲置一会，如此反复。把这个设置为 0，那么粒子系统只会发射一次。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Looping&lt;/strong&gt;：指定粒子系统是只发射一次（比如一次爆炸），还是持续发射（比如火山爆发）。把这个设置为 &lt;strong&gt;Loops continuously&lt;/strong&gt;，这样直到粒子发射器被移除出场景之前都会一直发射。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;哇！一个粒子系统竟然有这么&lt;strong&gt;多&lt;/strong&gt;的属性！没错，不过这也让我们可以精确地调出想要的效果来。&lt;/p&gt;
+
+&lt;p&gt;如果你精确地复制了上面的设置，那你的粒子系统现在呈现出来应该是这个样子：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14653928900371.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;如果不一样，请尝试旋转一下摄像头。把背景调成深蓝色也有助于观察粒子的效果。&lt;/p&gt;
+
+&lt;h2&gt;添加轨迹粒子效果&lt;/h2&gt;
+
+&lt;p&gt;现在是时候来给你的游戏添加一些炫酷的粒子效果了。把下面这段代码添加到你的 &lt;code&gt;GameViewController.swift&lt;/code&gt; 这个类中：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;// 1
+func 创建轨迹(颜色: UIColor, 几何体: SCNGeometry) -&amp;gt; SCNParticleSystem {
+  // 2
+  let 轨迹 = SCNParticleSystem(named: &amp;quot;轨迹.scnp&amp;quot;, inDirectory: nil)!
+  // 3
+  轨迹.particleColor = 颜色
+  // 4
+  轨迹.emitterShape = 几何体
+  // 5
+  return 轨迹
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;下面来解释一下上面的代码：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;定义一个函数 &lt;code&gt;创建轨迹(颜色: 几何体:)&lt;/code&gt;，包含&lt;code&gt;颜色&lt;/code&gt;和&lt;code&gt;几何体&lt;/code&gt;两个参数来建立粒子系统。&lt;/li&gt;
+&lt;li&gt;这一步把之前我们建立的粒子系统加载进来。&lt;/li&gt;
+&lt;li&gt;下一步，根据参数给定的颜色来调整粒子的基础色。&lt;/li&gt;
+&lt;li&gt;这一步使用&lt;code&gt;几何体&lt;/code&gt;这个参数来指定发射器的形状。&lt;/li&gt;
+&lt;li&gt;最后，返回这个刚刚创建好的粒子系统。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;这个方法的作用是创建 &lt;code&gt;SCNParticleSystem&lt;/code&gt; 的对象，然后我们还需要把这个创建好的粒子系统添加到生成的几何体上面。&lt;/p&gt;
+
+&lt;p&gt;注意&lt;code&gt;创建轨迹(颜色: 几何形状:)&lt;/code&gt;这个方法包含一个颜色参数来调整粒子的基本颜色。所以我们希望把粒子的颜色调整跟生成的几何体的颜色一样。&lt;/p&gt;
+
+&lt;p&gt;找到&lt;code&gt;生成几何体()&lt;/code&gt;这个方法，我们把设置几何体颜色的那行代码拆分一下，这样就可以把随机的颜色存储在一个变量里，就像这样：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;let 颜色 = UIColor.random()
+几何体.materials.first?.diffuse.contents = 颜色
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;下一步，还在&lt;code&gt;生成几何体()&lt;/code&gt;这个方法中，在&lt;code&gt;几何体节点.physicsBody?.applyForce……&lt;/code&gt;这行代码的下面，添加下面的代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;let 轨迹发射器 = createTrail(颜色, 几何体: 几何体)
+几何体节点.addParticleSystem(轨迹发射器)
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这一段使用&lt;code&gt;创建轨迹(颜色: 几何形状:)&lt;/code&gt;来创建了一个粒子系统并把它关联到了&lt;code&gt;几何体节点&lt;/code&gt;上。&lt;/p&gt;
+
+&lt;p&gt;编译并运行，来看一下你的这些努力背后的成果吧！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14659754784440.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;哇！:] 看起来不错 —— 如果能再有一个头部的状态显示栏就更好了。&lt;/p&gt;
+
+&lt;h2&gt;添加头部状态显示栏&lt;/h2&gt;
+
+&lt;p&gt;在这一节中，我们将使用之前导入的实用代码块来快速添加一个头部的状态栏来显示玩家的剩余生命数、最高分、以及当前分数。这些代码背后的技术就是使用  Sprite Kit 中的 Label（标签）来做显示。&lt;/p&gt;
+
+&lt;p&gt;在 &lt;code&gt;GameViewController.swift&lt;/code&gt; 中添加一个新的属性，就放在&lt;code&gt;重生时间&lt;/code&gt;的下面：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;var 游戏 = GameHelper.sharedInstance
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这一行代码让我们得到一个 &lt;code&gt;GameHelper&lt;/code&gt; 的单例对象，这里面包含了一系列的方法来帮助我们做那些繁琐的配置工作。&lt;/p&gt;
+
+&lt;p&gt;把下面这个方法添加到 &lt;code&gt;GameViewController&lt;/code&gt; 的底部，紧挨着&lt;code&gt;创建轨迹&lt;/code&gt;那个方法：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;func 创建HUD() {
+    游戏.hudNode.position = SCNVector3(x: 0.0, y: 10.0, z: 0.0)
+    scn场景.rootNode.addChildNode(游戏.hudNode)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注：HUD，即 Head Up Display（头部显示栏）的缩写。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这里我们使用预先编好的代码库中的 &lt;code&gt;hudNode&lt;/code&gt;，设置了它的位置然后把它加入到了场景中。&lt;/p&gt;
+
+&lt;p&gt;下面，我们需要在某个地方调用&lt;code&gt;创建HUD()&lt;/code&gt;这个方法。把下面这行代码添加到&lt;code&gt;viewDidLoad()&lt;/code&gt;方法的底部：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;创建HUD()
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;现在我们有了头部显示栏，然后我们需要让它的内容保持更新。想想这些代码应该放在哪？&lt;/p&gt;
+
+&lt;p&gt;没错，就是渲染循环。在&lt;code&gt;renderer(_: updateAtTime:)&lt;/code&gt;这个方法的最后，加入下面这行代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;游戏.updateHUD()
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;编译并运行；你将看到屏幕的顶部出现一个显示栏：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14659767221882.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;现在我们的游戏有了一个漂亮的头部显示栏，显示着玩家的生命值，最高分以及当前分数。&lt;/p&gt;
+
+&lt;p&gt;好的，头部显示栏是不错，但是现在是时候来给游戏添加一些互动了。&lt;/p&gt;
+
+&lt;h2&gt;添加手势处理&lt;/h2&gt;
+
+&lt;p&gt;在游戏中添加一个手势并不像人们想象中的那样简单易懂，很多事情都是这样。&lt;/p&gt;
+
+&lt;p&gt;第一步，我们要理解 3D 世界里的手势处理是怎么工作的。下面这张图显示了一次触摸是怎么被 Scene Kit 转换成 3D 的并决定你是在点击哪个物体的：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14659775975150.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;所以，处理一个用户的触摸事件需要哪几个步骤？&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;得到触摸位置&lt;/strong&gt;。首先，我们需要得到用户触摸在屏幕上的位置。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;转换坐标系&lt;/strong&gt;。然后，我们需要把这个位置转换为相对于我们的视图 &lt;code&gt;SCNView&lt;/code&gt; 的位置。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;发射一个测试射线&lt;/strong&gt;。当我们得到了相对于视图的位置后，SceneKit 可以在场景内发射一根测试用的射线（哦，不，不是那个 Ray :]），并返回与这根射线接触的物体列表。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;给节点命名&lt;/h3&gt;
+
+&lt;p&gt;在激活死亡射线之前，我们需要一个方法来标识每一个几何体。那最简单的标识方法就是给他们一个名字。&lt;/p&gt;
+
+&lt;p&gt;在&lt;code&gt;生成几何体()&lt;/code&gt;这个方法里，在&lt;code&gt;几何体节点.addParticleSystem(轨迹发射器)&lt;/code&gt;这行代码的下面，添加下面的代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;if 颜色 == UIColor.blackColor() {
+  几何体节点.name = &amp;quot;坏&amp;quot;
+} else {
+  几何体节点.name = &amp;quot;好&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这也符合老派电影中的坏蛋都是带着黑帽子这个精神，我们给黑色的物体命名为&amp;quot;坏&amp;quot;，而给其他的颜色命名为&amp;quot;好&amp;quot;。&lt;/p&gt;
+
+&lt;h3&gt;添加点击处理机制&lt;/h3&gt;
+
+&lt;p&gt;下面我们要写一个备用的方法，在知道用户点击了哪个几何体之后使用的点击处理机。&lt;/p&gt;
+
+&lt;p&gt;把下面这个方法添加到 &lt;code&gt;GameViewController&lt;/code&gt; 的底部，就放在 &lt;code&gt;创建HUD()&lt;/code&gt; 的下面：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;func 点击处理(节点: SCNNode) {
+  if 节点.name == &amp;quot;好&amp;quot; {
+    游戏.score += 1
+    节点.removeFromParentNode()
+  } else if 节点.name == &amp;quot;坏&amp;quot; {
+    游戏.lives -= 1
+    节点.removeFromParentNode()
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这个方法检查了被触摸的节点的名字：&amp;quot;好&amp;quot;的几何体增加分数，&amp;quot;坏&amp;quot;（黑）的几何体会损失玩家的一条命。然后无论好坏，这个节点都会被销毁。&lt;/p&gt;
+
+&lt;h3&gt;使用点击处理&lt;/h3&gt;
+
+&lt;p&gt;玩家每一次点击屏幕的时候，&lt;code&gt;touchesBegan(_: withEvent:)&lt;/code&gt; 这个方法都会被调用，我们就使用这个方法来捕捉用户的点击动作。&lt;/p&gt;
+
+&lt;p&gt;为了实现我们想要的效果，在&lt;code&gt;GameViewController&lt;/code&gt;里添加下面的代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;override func touchesBegan(touches: Set&amp;lt;UITouch&amp;gt;, withEvent event: UIEvent?) {
+  // 1
+  let 点击 = touches.first!
+  // 2
+  let 位置 = 点击.locationInView(scnView)
+  // 3
+  let 测试结果 = scn视图.hitTest(位置, options: nil)
+  // 4
+  if 测试结果.count &amp;gt; 0 {
+    // 5
+    let 结果 = hitResults.first!
+    // 6
+    点击处理(结果.node)
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;按照注释的顺序一个个来看：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;拿到第一个可用的点击。&lt;/li&gt;
+&lt;li&gt;把点击的位置转换成相对于&lt;code&gt;scn视图&lt;/code&gt;的本地坐标系。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hitTest(_: options:)&lt;/code&gt; 这个方法会返回一系列的 &lt;code&gt;SCNHitTestResult&lt;/code&gt; 对象。这些对象包含了与用户触摸位置发出的射线相交的任何物体的信息。&lt;/li&gt;
+&lt;li&gt;检查是否有返回的结果。&lt;/li&gt;
+&lt;li&gt;如果有，那么拿到返回序列的第一个对象。&lt;/li&gt;
+&lt;li&gt;最后，把这个对象传送到我们的点击处理方法，后者会根据对象的名字来决定是给玩家加一分 —— 还是扣除玩家的一条命！&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;最后一步。我们现在不再需要控制摄像头了，所以在&lt;code&gt;配置视图()&lt;/code&gt;中，修改相关语句为下面的样子：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;scn视图.allowsCameraControl = false
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;编译并运行；准备释放你的毁灭一指吧！:]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14659810213014.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;点击生成的物体把他们撕碎在空气中吧。啊哈！:]&lt;/p&gt;
+
+&lt;h2&gt;挑战&lt;/h2&gt;
+
+&lt;p&gt;现在是时候来炫酷了 —— 有什么东西比&lt;strong&gt;爆炸&lt;/strong&gt;更酷吗？我知道：&lt;strong&gt;没有&lt;/strong&gt;，对吗？&lt;/p&gt;
+
+&lt;p&gt;现在就是本章的挑战了：创建另一个粒子系统并把它命名为&lt;strong&gt;Explode.scnp&lt;/strong&gt;。看看你能不能看出需要调整哪些参数来让粒子爆炸。&lt;/p&gt;
+
+&lt;p&gt;这个效果应该看上去和这个差不多：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14659814043163.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;你可以使用下面这张图做为这个粒子系统的初始状态：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14659816500255.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注：如果你卡在这里了或者不想做这个挑战，下载完成的&lt;a href=&quot;&quot;&gt;粒子系统&lt;/a&gt;并把它加入到你的工程里。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;完成爆炸效果&lt;/h2&gt;
+
+&lt;p&gt;现在你已经创建好了爆炸的粒子系统，现在需要添加一些代码来让节点爆炸。这里要设置一些特殊的属性来让粒子爆炸时的形状和点击的几何体相同。&lt;/p&gt;
+
+&lt;p&gt;在 &lt;code&gt;GameViewController&lt;/code&gt; 的底部，添加以下的代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;// 1
+func 创建爆炸(几何: SCNGeometry, 位置: SCNVector3,
+  旋转: SCNVector4) {
+  // 2
+  let 爆炸 =
+    SCNParticleSystem(named: &amp;quot;Explode.scnp&amp;quot;, inDirectory:
+  nil)!
+  爆炸.emitterShape = 几何
+  爆炸.birthLocation = .Surface
+  // 3
+  let 旋转矩阵 =
+    SCNMatrix4MakeRotation(旋转.w, r旋转.x,
+      旋转.y, 旋转.z)
+  let 变换矩阵 =
+    SCNMatrix4MakeTranslation(位置.x, 位置.y, 
+      位置.z)
+  let 转换矩阵=
+    SCNMatrix4Mult(旋转矩阵, 变化矩阵)
+  // 4
+  scn场景.addParticleSystem(爆炸, withTransform: 
+    转换矩阵)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;下面是上面代码的一步步的讲解：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;创建爆炸(几何: 位置: 旋转:)&lt;/code&gt; 接受三个参数：&lt;code&gt;几何&lt;/code&gt;定义了粒子效果的外形，&lt;code&gt;位置&lt;/code&gt;和&lt;code&gt;旋转&lt;/code&gt;帮助把爆炸放置进场景里。&lt;/li&gt;
+&lt;li&gt;这一步加载 &lt;strong&gt;Explode.scnp&lt;/strong&gt; 这个文件，用来创建粒子发射器。发射器使用&lt;code&gt;几何&lt;/code&gt;作为 &lt;code&gt;emitterShape&lt;/code&gt;（发射器形状），这样粒子就会从几何体的表面开始发射。&lt;/li&gt;
+&lt;li&gt;欢迎来到黑客帝国（注：黑客帝国又名矩阵）！:] 不要被这三行代码吓住。它们只是把位置（变换）和旋转矩阵合成为转换矩阵，以供后面的方法 &lt;code&gt;addParticleSystem(_: withTransform:)&lt;/code&gt; 使用。&lt;/li&gt;
+&lt;li&gt;最后我们在 &lt;code&gt;scn场景&lt;/code&gt; 上调用 &lt;code&gt;addParticleSystem(_: withTransform:)&lt;/code&gt; 这个方法，把爆炸添加到场景中。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;我们现在离重现炫酷的好莱坞爆炸特效只有一步之遥了！把下面这些代码分别加入&lt;code&gt;点击处理(_:)&lt;/code&gt;的两个 &lt;code&gt;if&lt;/code&gt; 代码块内，都放在节点被删除之前：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;创建爆炸(节点.geometry!, 位置: 节点.presentationNode.position,旋转: 节点.presentationNode.rotation)
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这里我们使用 &lt;code&gt;presentationNode&lt;/code&gt; 这个属性来获得节点的位置 &lt;code&gt;position&lt;/code&gt; 和旋转 &lt;code&gt;rotation&lt;/code&gt;，然后调用&lt;code&gt;创建爆炸&lt;/code&gt;这个方法，传入这些参数。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注：这里使用 &lt;code&gt;presentationNode&lt;/code&gt; 的原因是因为当前模拟器还在移动节点。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;编译并运行，点击并让那些节点爆炸吧！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-BuildAndRun2-3.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;加点儿料！&lt;/h2&gt;
+
+&lt;p&gt;恭喜你！到这里你已经完成了你的第一个 SceneKit 3D游戏。&lt;/p&gt;
+
+&lt;p&gt;尽管如此，现在还有相当大的改进空间，不是吗？为了让你的游戏更上一层楼，你应该给游戏再增加一些&lt;strong&gt;料&lt;/strong&gt;。这会让你的游戏看起来更特别，从而在众多游戏中脱颖而出。&lt;/p&gt;
+
+&lt;p&gt;下面是一些可以给你的游戏加料的想法：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;游戏状态管理&lt;/strong&gt;。有了基本的游戏状态管理，你可以增加更多的游戏状态，比如“点击屏幕开始游戏”、“游戏”、“结束”等。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;闪动屏幕&lt;/strong&gt;。使用一些漂亮的屏幕闪动效果可以给玩家对于当前状态的一点提示。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;声音效果&lt;/strong&gt;。增加一些炫酷的音效，让玩家根据打击了“好”的几何体还是”坏”的几何体而得到不同的反馈。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;摄像头震动&lt;/strong&gt;。特别“坏”的爆炸应该产生特别大的振动。增加一个摄像头的震动肯定会让游戏更出色。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;接下来怎么办？&lt;/h2&gt;
+
+&lt;p&gt;这里是&lt;a href=&quot;https://github.com/FangYiXiong/GeometryFighter/archive/part-3-finished.zip&quot;&gt;完成后的代码&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;本节视频教程：&lt;a href=&quot;http://study.163.com/course/courseMain.htm?courseId=1002994069&quot;&gt;地址&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;译者注：如果您刚开始学习 iOS 开发，希望系统地学习并得到及时的指导，可以考虑来购买我的视频教程：&lt;a href=&quot;http://study.163.com/course/courseMain.htm?courseId=1002994069&quot;&gt;「从零开始」学习 3D iOS游戏编程&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;这一教程基于本文提及的&lt;a href=&quot;https://www.raywenderlich.com/store/3d-ios-games-by-tutorials&quot;&gt;《3D iOS 游戏教程》&lt;/a&gt;这本书，将会教给你制作 3D iOS 游戏中所需要知道的一切知识，在这个过程中你将从头开始制作一系列类似于&lt;a href=&quot;(https://itunes.apple.com/cn/app/fruit-ninja/id362949845?mt=8)&quot;&gt;水果忍者&lt;/a&gt;、经典的敲砖块，甚至苹果 WWDC 上和 Apple TV 一起首发的游戏 —— &lt;a href=&quot;https://itunes.apple.com/us/app/crossy-road-endless-arcade/id924373886?mt=8&quot;&gt;Crossy Road&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;于此同时，如果您有任何问题，欢迎在微博上 &lt;a href=&quot;http://weibo.com/fangyixiong&quot;&gt;@方一雄&lt;/a&gt; 给我留言或私信。&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Fri, 12 Aug 2016 03:43:44 +0800</pubDate>
+        <link>http://vno.onevcat.com/2016/08/scenekit-05/</link>
+        <guid isPermaLink="true">http://vno.onevcat.com/2016/08/scenekit-05/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>「从零开始」做一个水果忍者那样的游戏（Scene Kit 基础教程）第 4 节：渲染循环</title>
+        <description>&lt;p&gt;原文：&lt;a href=&quot;https://www.raywenderlich.com/128728/scene-kit-tutorial-swift-part-4-render-loop&quot;&gt;Scene Kit Tutorial with Swift Part 4: Render Loop&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注：这是&lt;a href=&quot;https://www.raywenderlich.com/store/3d-ios-games-by-tutorials&quot;&gt;《3D iOS 游戏教程》&lt;/a&gt;这本书中一个章节的缩写版，来让您可以来领略一下这本书的内容。希望您喜欢！&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-Thumb.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;这一教程将向你展示如何使用苹果最新的游戏框架－SceneKit，来创建你的第一个 3D 游戏。&lt;/p&gt;
+
+&lt;p&gt;在这个一共 5 节的系列教程中，你将会创建你的第一个 SceneKit 游戏：&lt;strong&gt;几何忍者（GeometryFighter）&lt;/strong&gt;！这是一个类似于&lt;strong&gt;&lt;a href=&quot;https://itunes.apple.com/cn/app/fruit-ninja/id362949845?mt=8&quot;&gt;水果忍者&lt;/a&gt;&lt;/strong&gt;那样的游戏，你来摧毁不断涌上屏幕的几何体来满足自己内心的破坏欲:]&lt;/p&gt;
+
+&lt;p&gt;下面是本系列教程文章的导航及简介：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-01&quot;&gt;第 1 节&lt;/a&gt;，你将会学习到如何新建一个空白的 SceneKit 工程做为一个好的开始。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-02&quot;&gt;第 2 节&lt;/a&gt;，开始编写游戏，并学习有关 SceneKit 节点的知识。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-03&quot;&gt;第 3 节&lt;/a&gt;，学习如何使用 SceneKit 内置的物理引擎来移动你的几何体。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-04&quot;&gt;第 4 节&lt;/a&gt;，学习有关 SceneKit 中有关渲染循环的知识，并让你的几何体不断重生。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在最后的&lt;a href=&quot;http://iOSinit.com/scenekit-05&quot;&gt;第 5 节&lt;/a&gt;中，你将学习如何将一些非常酷的粒子效果添加到游戏中，并最终完成这个游戏。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;本节是第四节，在本节的教程中，你将学习有关 SceneKit 中有关渲染循环的知识，并让你的几何体不断重生。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;本篇教程从上一节教程结束的地方开始。如果你没有跟上，不要着急 ———— 你可以从这里下载本节教程的&lt;a href=&quot;https://github.com/FangYiXiong/GeometryFighter/archive/part-3-finished.zip&quot;&gt;开始程序包&lt;/a&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;开始&lt;/h2&gt;
+
+&lt;p&gt;在上一节的教程中，我们给生成的几何体添加了物理引擎，然后给了一个冲击力把它扔到了空中。然后在模拟的重力作用下，物体最终还是慢慢落下然后消失不见。&lt;/p&gt;
+
+&lt;p&gt;现在这个效果看起来还不错，但是如果我们能同时生成很多的几何体，让他们一起飞向空中，还能互相碰撞，那就&lt;strong&gt;更&lt;/strong&gt;棒了。那样的话我们这个游戏的有趣程度绝对又会上升了一个档次！&lt;/p&gt;
+
+&lt;p&gt;现在，我们的游戏只会调用&lt;code&gt;生成几何体()&lt;/code&gt;这个方法一次。为了生成多个几何体，我们需要循环地多次调用&lt;code&gt;生成几何体()&lt;/code&gt;这个方法。下面将隆重介绍……&lt;strong&gt;渲染循环（Render Loop）&lt;/strong&gt;！&lt;/p&gt;
+
+&lt;p&gt;在之前的章节中我们讲过，Scene Kit 使用 &lt;strong&gt;SCNView&lt;/strong&gt; 来渲染你的内容。&lt;strong&gt;SCNView&lt;/strong&gt; 中有一个 &lt;strong&gt;delegate（代理）&lt;/strong&gt; 属性，这个属性设置的对象需要服从一个名为 &lt;strong&gt;SCNSceneRendererDelegate&lt;/strong&gt; 的协议。设置好之后，&lt;strong&gt;SCNView&lt;/strong&gt; 在之后每一帧的动画和渲染的过程中，当某一个事件发生时，就会调用 &lt;strong&gt;SCNSceneRendererDelegate&lt;/strong&gt; 协议中相关的方法。&lt;/p&gt;
+
+&lt;p&gt;用这种方式，你可以窥见 Scene Kit 渲染一个场景中的每一个步骤。这些渲染的步骤组成了&lt;strong&gt;渲染循环&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;所以 —— 到底都&lt;strong&gt;有&lt;/strong&gt;哪些步骤？来看一下下面这张渲染循环的示意图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-8.pic_hd.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;这是&lt;strong&gt;幸运大转盘&lt;/strong&gt;吗？:] 不，这只是关于渲染循环中 9 个步骤的一个简单的示意图。如果一个游戏的帧率是 60 FPS，猜猜看这些步骤将运行多少次？没错，你猜对了，一秒钟 60 次。&lt;/p&gt;
+
+&lt;p&gt;我们可以把游戏的逻辑代码准确地加入到需要的地方，因为这些步骤总是按照下面的顺序运行：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;更新&lt;/strong&gt;: 视图在代理上调用 &lt;code&gt;renderer(_: updateAtTime:)&lt;/code&gt; 这个方法。这里是我们放入游戏场景更新的逻辑代码的好时机。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;执行动作和动画&lt;/strong&gt;：Scene Kit 会执行场景中所有节点上关联的动作和动画效果。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;完成动画&lt;/strong&gt;：视图会在代理上调用 &lt;code&gt;renderer(_: didApplyAnimationsAtTime:)&lt;/code&gt; 这个方法。在这时，所有的节点都完成了这一帧需要完成的动画。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;物理模拟&lt;/strong&gt;：Scene Kit 开始在场景中所有的节点上施加物理模拟的影响。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;完成物理模拟&lt;/strong&gt;：视图会在代理上调用 &lt;code&gt;renderer(_: didSimulatePhysicsAtTime:)&lt;/code&gt; 这个方法。在这时，所有的节点都完成了这一帧需要完成的物理模拟。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;计算约束&lt;/strong&gt;：Scene Kit 将计算并实施约束。所谓约束，就是我们告诉 Scene Kit 的一些参数，用来决定如何变换节点来适配。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;开始渲染&lt;/strong&gt;：视图会在代理上调用 &lt;code&gt;renderer(_: willRenderScene: atTime:)&lt;/code&gt; 这个方法。在这时，视图马上要开始渲染场景了，所以任何需要放到最后的改变都应该放在这里。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;渲染&lt;/strong&gt;：Scene Kit 渲染视图中的场景。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;完成渲染&lt;/strong&gt;：循环的最后一步是调用 &lt;code&gt;renderer(_: didRenderScene: atTime:)&lt;/code&gt;。这标志着一次渲染循环的结束；我们可以把任何需要在下一次循环开始前执行的代码放在这里。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;由于渲染循环是一个，嗯，&lt;strong&gt;循环&lt;/strong&gt;。所以这是我们放置&lt;code&gt;生成几何体&lt;/code&gt;的完美地点 —— 接下来的任务就是要决定应该放到哪个步骤里。&lt;/p&gt;
+
+&lt;h2&gt;添加渲染代理&lt;/h2&gt;
+
+&lt;p&gt;现在是时候把这个炫酷的功能添加到游戏中了。&lt;/p&gt;
+
+&lt;p&gt;首先，我们需要让 &lt;code&gt;GameViewController&lt;/code&gt; 这个类遵守 &lt;code&gt;SCNSceneRendererDelegate&lt;/code&gt; 这个协议。把下面的代码添加到 &lt;strong&gt;GameViewController.swift&lt;/strong&gt; 这个文件的底部：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;// 1
+extension GameViewController: SCNSceneRendererDelegate {
+  // 2
+  func renderer(renderer: SCNSceneRenderer, updateAtTime 当前时间: NSTimeInterval) {
+    // 3
+    生成几何体()
+  }
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;接下来让我们仔细看看上面的代码：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;这里我们给 &lt;code&gt;GameViewController&lt;/code&gt; 添加了一个扩展（extension），让它遵守一个协议，并把这部分代码单独组织在了一个代码块中。&lt;/li&gt;
+&lt;li&gt;这里添加了协议方法 &lt;code&gt;renderer(_: updateAtTime:)&lt;/code&gt; 的一个实现。&lt;/li&gt;
+&lt;li&gt;最后，在这个代理方法中，我们调用&lt;code&gt;生成几何体()&lt;/code&gt;来生成一个新的几何形状。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;这是我们侵入 Scene Kit 渲染循环的第一步。但是在视图调用这个代理方法之前，它首先要知道我们的 &lt;code&gt;GameViewController&lt;/code&gt; 现在是视图的代理了。&lt;/p&gt;
+
+&lt;p&gt;在&lt;code&gt;配置视图()&lt;/code&gt;方法的最后添加这样一行代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;scn视图.delegate = self
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这行代码将 Scene Kit 的视图的 &lt;code&gt;delegate&lt;/code&gt; 设置给了 &lt;code&gt;self&lt;/code&gt;。现在当渲染循环开始后，视图就可以调用我们在 &lt;code&gt;GameViewController&lt;/code&gt; 中写好的代理方法了。&lt;/p&gt;
+
+&lt;p&gt;最后，我们做一点清理工作：把 &lt;code&gt;viewDidLoad()&lt;/code&gt; 中的 &lt;code&gt;生成几何体()&lt;/code&gt; 这行代码删除掉。因为我们已经在渲染循环中生成几何体了，所以这里就没必要再写它了。&lt;/p&gt;
+
+&lt;p&gt;编译并运行；感受渲染循环不端生成的怒火吧！:]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14638106416213.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;游戏开始后疯狂地生成几何体，最终导致所有的几何体都撞在了一起 —— 好棒！:]&lt;/p&gt;
+
+&lt;p&gt;到底发生了什么？因为我们在渲染循环的每一更新时都调用了一次&lt;code&gt;生成几何体()&lt;/code&gt;这个方法，所以每秒钟将生成 60 个几何体 —— 如果设备的性能足够强大以 60 FPS 来运行游戏的话。但是性能稍弱的设备（包括模拟器）都支持不了这个速度。&lt;/p&gt;
+
+&lt;p&gt;游戏开始运行后，你会发现底部的帧率会突然下降很多。这是因为图形处理器不止要处理不断增加的几何体，同时还要计算物体间的碰撞模拟，这都会大幅地降低帧率。&lt;/p&gt;
+
+&lt;p&gt;现在事情有点不受控制了，因为我们现在的游戏在很多设备上的表现都不会很好。&lt;/p&gt;
+
+&lt;h2&gt;增加定时器&lt;/h2&gt;
+
+&lt;p&gt;为了更好地提高用户体验，你需要使用好&lt;strong&gt;时间&lt;/strong&gt;。哦，不，我不是说你要花更多的时间来写游戏的代码！:]我的意思是，你需要让时间在各个设备上都保持一致；这样无论设备本身的帧率如何，你的动画都将保持一个固定的频率。&lt;/p&gt;
+
+&lt;p&gt;使用&lt;strong&gt;定时器&lt;/strong&gt;是很多游戏中都会用到的一个常用技术。还记得在更新的代理方法中传入的参数 &lt;strong&gt;updateAtTime&lt;/strong&gt;吗？这个参数代表了当前的系统时间。如果我们跟踪记录这个参数，我们就可以计算出游戏中流逝的时间，进而控制生成几何体的频率，比如每三秒钟生成一个，而不是现在这样越快越好。&lt;/p&gt;
+
+&lt;p&gt;几何忍者中将使用一个简单的定时器来随机生成几何体，同时这个生成时间的间隔应该大到足够任何设备的处理器能正常运行。&lt;/p&gt;
+
+&lt;p&gt;在 &lt;code&gt;GameViewController&lt;/code&gt; 中增加一个新的属性，就放在&lt;code&gt;摄像头节点&lt;/code&gt;的下面：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;var 重生时间: NSTimeInterval = 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;我们将使用这个属性来决定下次生成几何体的时间。&lt;/p&gt;
+
+&lt;p&gt;为了解决当前持续生成几何体的问题，把 &lt;code&gt;renderer(_: updateAtTime:)&lt;/code&gt; 这个方法中的内容替换成下面的：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;// 1
+if 当前时间 &amp;gt; 重生时间 {
+  生成几何体()
+ 
+  // 2
+  重生时间 = 当前时间 + NSTimeInterval(Float.random(min: 0.2, max: 1.5))
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;按照注释的顺序来解释：
+1. 首先检查&lt;code&gt;当前时间&lt;/code&gt;是否大于&lt;code&gt;重生时间&lt;/code&gt;。如果是，那么就生成一个新的几何体；否则，什么都不做。
+2. 生成几何体之后，更新&lt;code&gt;重生时间&lt;/code&gt;为&lt;strong&gt;下一次&lt;/strong&gt;生成新几何体的时间。而下一次重生的时间就是当前的时间再加上一段随机的时间。因为 &lt;code&gt;NSTimeInterval&lt;/code&gt; 是以秒为单位的，我们下一次生成几何体的时间就是当前时间的 0.2 秒到 1.5 秒之间。&lt;/p&gt;
+
+&lt;p&gt;编译并运行，来看看定时器的作用：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14638244732814.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;相当梦幻，不是吗？&lt;/p&gt;
+
+&lt;p&gt;事情开始变的可以控制了，同时几何体的生成还是随机的。但是你就不好奇当这些几何体都跌落并消失在视野之外以后将发生什么吗？&lt;/p&gt;
+
+&lt;h2&gt;清理场景&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;生成几何体()&lt;/code&gt; 持续地在场景中添加新的子节点 —— 但是从不删除旧的，即使是那么已经看不见的。Scene Kit 会尽可能保持游戏地平稳运行，但是那并不代表你可以忘记你的孩子们。你说你这算哪门子父母呀？！:]&lt;/p&gt;
+
+&lt;p&gt;为了让游戏尽可能地高效运行并保持理想的帧率，我们需要把视野之外的节点移除。想想在什么地方做这个清理工作最合适呢？啊哈，对啦，就是渲染循环！很方便，是不是？&lt;/p&gt;
+
+&lt;p&gt;当物体到达我们的边界时，我们就要把它移出场景。&lt;/p&gt;
+
+&lt;p&gt;将下面这个方法添加到 &lt;code&gt;GameViewController&lt;/code&gt; 这个类的底部，就放在&lt;code&gt;生成几何体()&lt;/code&gt;的下面：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;func 清理场景() {
+  // 1
+  for 节点 in scn场景.rootNode.childNodes {
+    // 2
+    if 节点.presentationNode.position.y &amp;lt; -2 {
+      // 3
+      节点.removeFromParentNode()
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;下面来解释一下上面的代码在干什么：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;首先我们使用了一个简单的循环来遍历场景中所有的节点。&lt;/li&gt;
+&lt;li&gt;由于此时物理模拟还在进行中，我们不能简单地来使用物体的位置，因为这时它的位置是模拟动画&lt;strong&gt;之前&lt;/strong&gt;的位置。Scene Kit 在动画过程中保留了一套物体的备份直到动画结束。这个概念第一次听的时候会让人感觉很奇怪，但是不久之后你就会理解了。为了得到动画中物体真正的位置，我们使用 &lt;code&gt;presentationNode&lt;/code&gt; 这个属性。这个属性是只读的，不要尝试修改它！&lt;/li&gt;
+&lt;li&gt;这行代码就是把物体清除掉。对你的孩子这样做看起来很残忍，但是，你要知道，这正是所谓严厉的爱啊。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;为了使用上面这个方法，在 &lt;code&gt;renderer(_: updatedAtTime:)&lt;/code&gt; 那个方法中，&lt;code&gt;if&lt;/code&gt; 之后，增加这样一行代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;清理场景()
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;还有一件事情：默认设置中，当没有动画需要执行时 Scene Kit 会进入一个“暂停”的状态。为了阻止它的放生，我们需要打开视图的 &lt;code&gt;playing&lt;/code&gt; 这个属性。&lt;/p&gt;
+
+&lt;p&gt;在&lt;code&gt;配置视图()&lt;/code&gt;这个方法的底部添加一行代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;scn视图.playing = true
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这行代码让 Scene Kit 的视图一致保持运行状态。&lt;/p&gt;
+
+&lt;p&gt;编译并运行；当屏幕中的物体开始下落时，拉远你的摄像头来看它们是怎么消失不见的：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14638245002023.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;下落到 Y 轴边界（图中红线）之下的物体会被清除掉。这样肯定要比让它们一直躺在你的 iPhone 的底部好多了。:]&lt;/p&gt;
+
+&lt;h2&gt;接下来怎么办？&lt;/h2&gt;
+
+&lt;p&gt;这里是&lt;a href=&quot;https://github.com/FangYiXiong/GeometryFighter/archive/part-4-finished.zip&quot;&gt;完成后的代码&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;就目前而言，您应该继续阅读本系列教程的&lt;a href=&quot;http://iOSinit.com/scenekit-05&quot;&gt;最后的第五节&lt;/a&gt;，在那里，你将学习如何将一些非常酷的粒子效果添加到游戏中，最终完成这个游戏。&lt;/p&gt;
+
+&lt;p&gt;本节视频教程：&lt;a href=&quot;&quot;&gt;地址&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;译者注：如果您刚开始学习 iOS 开发，希望系统地学习并得到及时的指导，可以考虑来购买我的视频教程：&lt;a href=&quot;http://iosinit.com/ios-3d-games/&quot;&gt;「从零开始」学习 3D iOS游戏编程&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;这一教程基于本文提及的&lt;a href=&quot;https://www.raywenderlich.com/store/3d-ios-games-by-tutorials&quot;&gt;《3D iOS 游戏教程》&lt;/a&gt;这本书，将会教给你制作 3D iOS 游戏中所需要知道的一切知识，在这个过程中你将从头开始制作一系列类似于&lt;a href=&quot;(https://itunes.apple.com/cn/app/fruit-ninja/id362949845?mt=8)&quot;&gt;水果忍者&lt;/a&gt;、经典的敲砖块，甚至苹果 WWDC 上和 Apple TV 一起首发的游戏 —— &lt;a href=&quot;https://itunes.apple.com/us/app/crossy-road-endless-arcade/id924373886?mt=8&quot;&gt;Crossy Road&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;于此同时，如果您有任何问题，欢迎在微博上 &lt;a href=&quot;http://weibo.com/fangyixiong&quot;&gt;@方一雄&lt;/a&gt; 给我留言或私信。&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Sun, 19 Jun 2016 07:17:03 +0800</pubDate>
+        <link>http://vno.onevcat.com/2016/06/scenekit-04/</link>
+        <guid isPermaLink="true">http://vno.onevcat.com/2016/06/scenekit-04/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>「从零开始」做一个水果忍者那样的游戏（Scene Kit 基础教程）第 3 节：物理引擎</title>
+        <description>&lt;p&gt;原文：&lt;a href=&quot;https://www.raywenderlich.com/128711/scene-kit-tutorial-swift-part-3-physics&quot;&gt;Scene Kit Tutorial with Swift Part 3: Physics&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注：这是&lt;a href=&quot;https://www.raywenderlich.com/store/3d-ios-games-by-tutorials&quot;&gt;《3D iOS 游戏教程》&lt;/a&gt;这本书中一个章节的缩写版，来让您可以来领略一下这本书的内容。希望您喜欢！&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-Thumb.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;这一教程将向你展示如何使用苹果最新的游戏框架－SceneKit，来创建你的第一个 3D 游戏。&lt;/p&gt;
+
+&lt;p&gt;在这个一共 5 节的系列教程中，你将会创建你的第一个 SceneKit 游戏：&lt;strong&gt;几何忍者（GeometryFighter）&lt;/strong&gt;！这是一个类似于&lt;strong&gt;&lt;a href=&quot;https://itunes.apple.com/cn/app/fruit-ninja/id362949845?mt=8&quot;&gt;水果忍者&lt;/a&gt;&lt;/strong&gt;那样的游戏，你来摧毁不断涌上屏幕的几何体来满足自己内心的破坏欲:]&lt;/p&gt;
+
+&lt;p&gt;下面是本系列教程文章的导航及简介：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-01&quot;&gt;第 1 节&lt;/a&gt;，你将会学习到如何新建一个空白的 SceneKit 工程做为一个好的开始。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-02&quot;&gt;第 2 节&lt;/a&gt;，开始编写游戏，并学习有关 SceneKit 节点的知识。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-03&quot;&gt;第 3 节&lt;/a&gt;，学习如何使用 SceneKit 内置的物理引擎来移动你的几何体。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-04&quot;&gt;第 4 节&lt;/a&gt;，学习有关 SceneKit 中有关渲染循环的知识，并让你的几何体不断重生。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在最后的&lt;a href=&quot;http://iOSinit.com/scenekit-05&quot;&gt;第 5 节&lt;/a&gt;中，你将学习如何将一些非常酷的粒子效果添加到游戏中。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;本节是第三节，在本节的教程中，你将学习到如何使用 SceneKit 内置的物理引擎来移动你的几何体。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;本篇教程从上一节教程结束的地方开始。如果你没有跟上，不要着急 ———— 你可以从这里下载本节教程的&lt;a href=&quot;https://github.com/FangYiXiong/GeometryFighter/archive/part-2-challenge-finished.zip&quot;&gt;开始程序包&lt;/a&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;开始&lt;/h2&gt;
+
+&lt;p&gt;Scene Kit 的物理引擎不仅强大，使用起来还很简单。你只需要简单地告诉 Scene Kit 哪些物体需要符合物理规律，物理引擎就会从这时开始接管一切，帮助你来模拟各种诸如重力、碰撞等情况。&lt;/p&gt;
+
+&lt;p&gt;在集成物理引擎之前，我们先来添加一些程序文件到程序里。&lt;/p&gt;
+
+&lt;p&gt;这些文件是专门用来减轻我们的工作量的。这里面包括了一系列的&lt;strong&gt;助手（helper）方法&lt;/strong&gt;用来简化一些繁琐的模版代码，好让我们专心于游戏逻辑的编写。&lt;/p&gt;
+
+&lt;p&gt;要添加这些文件，只需要把资源包中的 &lt;strong&gt;GameUtils&lt;/strong&gt; 这个文件夹拖拽到你的游戏工程文件下的 GeometryFighter 这个组下，然后在弹出的窗口：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-20-14628575462549.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;保持所有的选项默认状态，点击右下角的 &lt;strong&gt;Finish&lt;/strong&gt;，这时你的工程文件的目录应该是下面这个样子的：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-20-14628576169968.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;刚才这个操作把整个 &lt;strong&gt;GameUtils&lt;/strong&gt; 文件夹的内容以组的形式导入到了你的工程里。你可以展开这个文件组，随意浏览一些这些文件中的代码，但是如果发现有很多看不懂的地方，&lt;strong&gt;不要&lt;/strong&gt;着急，这很正常:]&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;完成导入之后编译并运行现在的程序。如果你得到一个有关 &lt;strong&gt;loadSound(_:fileNamed:)&lt;/strong&gt; 的错误提示，原因可能是你的 Xcode 版本过低导致的。要解决这个问题，你可以升级 Xcode，或者把有错误的那行代码改成：&lt;strong&gt;sound!.load()&lt;/strong&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;初识物理引擎（Physics）&lt;/h2&gt;
+
+&lt;p&gt;现在是时候来检视一下我们当前的游戏了。游戏启动，一个炫酷的随机几何体如同某种黑魔法一般地凭空出现在了我们的视野中，然后呢？就……没有然后了。这多少看起来不太像回事，但是别着急，事情肯定很快就会变的「像」那么回事起来！:]&lt;/p&gt;
+
+&lt;p&gt;到目前为止，我们这个刚刚生成的几何体仅仅是呆呆的待在空中，什么都不能做。没错，你是可以旋转摄像机的角度，放大缩小等等，但也就这样了。这不是一个有趣的游戏。那为了增加游戏的刺激程度，至少我们也应该让这个几何体动起来。&lt;/p&gt;
+
+&lt;p&gt;现在，你&lt;strong&gt;可以&lt;/strong&gt;手动地调整物体的位置，移动它，旋转它等等。但是尽管这种方法是可行的，很快你就会意识到这样做需要写大量繁琐的代码，尤其是当之后再遇到物体间的碰撞、跟玩家的交互等问题时，情况会变得更加复杂。&lt;/p&gt;
+
+&lt;p&gt;庆幸的是，苹果公司的软件工程师已经想到了这个问题。所以他们已经在 Scene Kit 中内置了一个强大的 3D 物理引擎来处理这些问题。为了使用这个内置的物理引擎，我们只需要让它知道我们的几何体就可以了。&lt;/p&gt;
+
+&lt;p&gt;和之前给节点增加物理形状的方法一样，我们需要把一个&lt;strong&gt;物理实体（physics body）&lt;/strong&gt;跟节点链接起来。物理实体描述了所有物理学相关的属性，包括比如形状、质量、摩擦力、湿度等。系统的物理引擎会把所有这些因素进行综合计算，来模拟物体的现实世界中的各种物理交互。这种交互包括自由落地、摩擦、与其它物体的碰撞等。&lt;/p&gt;
+
+&lt;p&gt;下一小节会对物理实体的一些重要特性进行详细地说明。&lt;/p&gt;
+
+&lt;h3&gt;物理实体的类型&lt;/h3&gt;
+
+&lt;p&gt;创建物理实体时一个必须指定的关键属性就是它的&lt;strong&gt;类型（type）&lt;/strong&gt;。物理实体的类型决定了一个物体在模拟运动时受不受到力或碰撞的影响。&lt;/p&gt;
+
+&lt;p&gt;在 Scene Kit 中有三种类型：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;静态（Static）&lt;/strong&gt;实体不移动：其它的物体可以碰到静态实体，但是静态实体本身不受到力和碰撞的影响。举例来说，诸如墙或者巨大静止的石头就可以使用这种类型。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;动态（Dynamic）&lt;/strong&gt;实体同时受到力和碰撞的影响。可以移动的椅子、桌子、杯子等等都可以使用这种类型。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;运动学（Kinematic）&lt;/strong&gt;实体类似于静态实体，也不受到力或碰撞的影响。不同的是它们本身可以移动，并且可以碰撞其它的动态实体。比如一个运动中的电梯、可以开关的门都可以应用这种类型。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;物理实体的形状&lt;/h3&gt;
+
+&lt;p&gt;除了类型，另外一个在创建物理实体时必须指定的属性就是它的&lt;strong&gt;形状（shape）&lt;/strong&gt;。这里的形状指的是物理学的形状，是供物理引擎在碰撞交互时使用的&lt;strong&gt;物理学&lt;/strong&gt;外形。而我们之前讲过的几何体形状是指节点的&lt;strong&gt;视觉&lt;/strong&gt;外形，是供玩家去看的。这两者通常是不一样的。&lt;/p&gt;
+
+&lt;p&gt;为了让物理引擎在模拟计算时尽可能地快，我们要使用尽可能简单的几何体来定义物理实体的形状。一般来说，我们只需要使用一个大概近似于物体视觉外观的简单形状，比如一个立方体、球体或者系统提供的那些原型的某一个，来指定物理实体的形状，比如下图这样：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-20-14628660968750.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;添加物理引擎&lt;/h2&gt;
+
+&lt;p&gt;既然你已经学习了物理引擎背后的理论，现在是时候来应用这些概念移动游戏中的物体了。&lt;/p&gt;
+
+&lt;p&gt;在 Scene Kit 中，所有的物理实体都是 &lt;strong&gt;SCNPhysicsBody&lt;/strong&gt; 这个类的对象。然后我们需要把它赋值给某个 &lt;strong&gt;SCNNode&lt;/strong&gt;（节点）的 &lt;strong&gt;physicsBody&lt;/strong&gt;（物理实体）这个属性以供其使用。赋值之后，系统的物理引擎就可以开始工作了。就是这么简单！:]&lt;/p&gt;
+
+&lt;p&gt;打开 &lt;strong&gt;GameViewController.swift&lt;/strong&gt; 这个文件，在&lt;code&gt;生成几何体()&lt;/code&gt; 这个方法里，在创建完&lt;code&gt;几何体节点&lt;/code&gt;那一行代码的下面，添加这样一行代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;几何体节点.physicsBody = SCNPhysicsBody(type: .Dynamic, shape: nil)
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这行代码创建了一个新的 &lt;strong&gt;SCNPhysicsBody&lt;/strong&gt; 的对象，并把它赋值给了&lt;code&gt;几何体节点&lt;/code&gt;的 &lt;strong&gt;physicsBody&lt;/strong&gt; 这个属性。当创建物理实体时，我们需要指定它的类型（type）和形状（shape）。如果在形状（shape）这个参数传递一个 &lt;strong&gt;nil&lt;/strong&gt;，那么 Scene Kit 就会自动基于节点的几何形状生成一个物理学形状。很简单，是不是？&lt;/p&gt;
+
+&lt;p&gt;如果你想给物理学形状添加更多的细节，你可以使用自己创建的 &lt;strong&gt;SCNPhysicsShape&lt;/strong&gt; 的对象来代替 &lt;strong&gt;nil&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;编译并运行你的游戏。一个随机的几何体出现在了场景中，然后很快就像一只死去的鸟一样向下坠落，消失在了视野之外：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-20-14628681167508.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;你甚至可以调整摄像头的角度来观察这个坠落的过程。那你现在看到的就是在物体上应用重力的结果。Scene Kit 中的场景默认是有重力的。因为我们刚刚给生成的几何体添加了物体实体，所以物理引擎就开始在物体上模拟各种力（比如重力）的作用了。&lt;/p&gt;
+
+&lt;h2&gt;了解作用力（Force）&lt;/h2&gt;
+
+&lt;p&gt;想象一下现实生活的场景：为了让一个物体移动，比如桌子上的汤匙，你必须使用某种力作用在它上面。当然了，除非你生活在「黑客帝国」的世界中，你的名字叫里奥。不过那样的话，根本也找不到什么汤匙。:]&lt;/p&gt;
+
+&lt;p&gt;Scene Kit 的物理引擎在模拟现实的物理学规律方面做的非常好，这意味着我们可以像现实中那样，使用一个力作用于物体上，来让它移动。&lt;/p&gt;
+
+&lt;p&gt;当我们在物体上施加力的作用时，我们使用 &lt;strong&gt;applyForce(_: atPosition: impluse:)&lt;/strong&gt; 这个函数，前两个参数的类型都是 &lt;strong&gt;SCNVector3&lt;/strong&gt;（向量），用来指定力的方向和作用的点。最后一个参数是问我们这个力是不是一个瞬时的冲击力。&lt;/p&gt;
+
+&lt;p&gt;一个瞬时的冲击力只作用在物体上一次，类似于你踢一脚足球。&lt;strong&gt;非瞬时&lt;/strong&gt;的力
+会在模拟运动时的每一帧都发挥作用。这种非瞬时的力适合用来模拟比如升空的火箭，这种情况下力是持续作用的。&lt;/p&gt;
+
+&lt;p&gt;我们刚刚说了力是一个由 X、Y、Z 三个方向组成的向量。这是什么意思呢？来看一下下面的图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-20-14628702735973.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;作用力有大小和方向，一个向量定义了力在每一个方向上的大小。在图中的例子中，一个向量为 &lt;strong&gt;(x:0, y:10, z:0)&lt;/strong&gt; 的力会让这个方块向上移动。&lt;/p&gt;
+
+&lt;p&gt;要施加水平方向的力，我们只需要指定 X 轴的大小，比如图中 &lt;strong&gt;(x:10, y:0, z:0)&lt;/strong&gt;。如果要想向左移动，那么 X 轴应该是负的。如果把这两个向量加起来，那么我们就可以让物体朝任何我们想要的位置移动了。比如图中的 &lt;strong&gt;(x:10, y:10, z:0)&lt;/strong&gt;，斜向移动。&lt;/p&gt;
+
+&lt;p&gt;作用力同样可以施加在物体的不同点上来产生不同的移动：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-20-14628708972310.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;施加同样的力在这 3 个不同的点上产生了不同的效果，左右两边的会导致物体旋转，而中间则不会。想想现实中的情况，应该很容易理解。&lt;/p&gt;
+
+&lt;h3&gt;施加作用力&lt;/h3&gt;
+
+&lt;p&gt;撸起你得袖子来 —— 现在开始要用力了！:]&lt;/p&gt;
+
+&lt;p&gt;在&lt;code&gt;生成几何体()&lt;/code&gt;这个方法中，紧挨着&lt;code&gt;几何体节点.physicsBody = ...&lt;/code&gt;这一行代码，添加下面这段代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;// 1
+let 随机X = Float.random(min: -2, max: 2)
+let 随机Y = Float.random(min: 10, max: 18)
+// 2
+let 力 = SCNVector3(x: 随机X, y:随机Y, z:0)
+// 3
+let 位置 = SCNVector3(x: 0.05, y: 0.05, z: 0.05)
+// 4
+几何体节点.physicsBody?.applyForce(力, atPosition: 位置, impulse: true)
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;下面按照注释的顺序一个个进行讲解：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;首先，创建两个随机数来代表 X 方向和 Y 方向的力的大小。&lt;/li&gt;
+&lt;li&gt;然后，使用这两个随机数来生成一个代表力的向量。&lt;/li&gt;
+&lt;li&gt;这里生成了另外一个向量来代表力作用在物体上的位置。这个点和物体的中心点稍微有点偏离，这样可以产生一个旋转。（注：&lt;code&gt;（x:0, y:0, z:0）&lt;/code&gt;代表中心点）。&lt;/li&gt;
+&lt;li&gt;最后，在几何体节点的物体实体上调用 &lt;code&gt;applyForce(_: atPosition: impluse)&lt;/code&gt; 这个方法，填入上面生成的参数，来给物体施加力的作用。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;编译并运行，你将看到：凭空出现了一个几何体，和之前不一样，这个几何体像被施了魔法一般地被踢了上去：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-20-14630195698020.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;但是随着重力的作用，物体最终还是会向下坠落。&lt;/p&gt;
+
+&lt;h2&gt;认识扭力（Torque）&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;扭力（Torque）&lt;/strong&gt;是另外一种我们可以用来让物体旋转的力，使用的方法是 &lt;code&gt;applyTorque(_: impulse:)&lt;/code&gt;。扭转力只影响物体的角速度，不影响线速度。施加扭转力将会导致物体沿着它的质量中心进行旋转。&lt;/p&gt;
+
+&lt;p&gt;为了说明扭力如何影响物体，来看一下下面这张示意图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-20-14630199372729.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;和作用力的三维向量不一样，扭力使用四维向量 &lt;strong&gt;SCNVector4&lt;/strong&gt; 来表示。X、Y、Z 三个轴决定了围绕哪个轴来旋转（扭力的方向）；还有一个 W 轴决定旋转的角度的多少，也就是扭力的大小。&lt;/p&gt;
+
+&lt;p&gt;和使用作用力时的方法 &lt;code&gt;applyForce(_: atPosition: impulse:)&lt;/code&gt; 一样，扭力在最后也有一个参数用来指定它是不是一个瞬时的冲击力。&lt;/p&gt;
+
+&lt;p&gt;如果一个扭力是瞬时的，那么这种角度的旋转就是一次性的，瞬时发生的。想象一下我们在手指尖上转篮球的情景：为了让篮球一直保持旋转，你需要快速地用手去扇篮球的一侧，每一次扇都是一个冲击力，瞬间增加了篮球的旋转角度。&lt;/p&gt;
+
+&lt;p&gt;如果扭力不是瞬时的冲击力，那么在物理引擎模拟的每一帧都会施加这个力。这种情况可以想象一下我们的地球，绕着南北极的轴线不停地自转，就是一个非瞬时的扭力。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注：Scene Kit 的物理引擎使用国际单位制（SI）来度量：质量单位是&lt;strong&gt;千克&lt;/strong&gt;，力的单位是&lt;strong&gt;牛顿&lt;/strong&gt;，冲击力的单位是&lt;strong&gt;牛顿·秒&lt;/strong&gt;，扭力的单位是&lt;strong&gt;牛顿·米&lt;/strong&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;加点料&lt;/h2&gt;
+
+&lt;p&gt;现在我们已经让几何体动起来了，你可能已经注意到了现在它就凭空地从屏幕中间出现，这个感觉不太好。为了解决这个问题，我们要把摄像头在 Y 轴的位置调整一下，这样看起来几何体就是从屏幕外面飞上来的了。&lt;/p&gt;
+
+&lt;h3&gt;调整摄像机的位置&lt;/h3&gt;
+
+&lt;p&gt;为了把摄像机的位置移上一点，把&lt;code&gt;配置摄像头()&lt;/code&gt;这个方法里设置摄像机位置的那行代码替换成下面的：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;摄像头节点.position = SCNVector3(x: 0, y: 5, z: 10)
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;编译并运行，你会看到几何体从屏幕外面飞上来了！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-20-14630257476551.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;h3&gt;添加颜色&lt;/h3&gt;
+
+&lt;p&gt;做为本节最后的修饰，我们要给随机生成的几何体增加一点多样性来。&lt;/p&gt;
+
+&lt;p&gt;还是回到&lt;code&gt;生成几何体()&lt;/code&gt;这个方法，在随机生成&lt;strong&gt;几何体&lt;/strong&gt;之后，创建&lt;strong&gt;几何体节点&lt;/strong&gt;之前，添加这样一行代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;几何体.materials.first?.diffuse.contents = UIColor.random()
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;为了给随机的几何体上色，我们在这里调整了&lt;strong&gt;几何体&lt;/strong&gt;的 &lt;strong&gt;materials（材质）&lt;/strong&gt;。这行代码拿到了&lt;strong&gt;几何体&lt;/strong&gt;上第一个可用的材料，然后把它的 &lt;strong&gt;diffuse&lt;/strong&gt;这个属性的 &lt;strong&gt;contents&lt;/strong&gt; 设置为了一个随机的颜色。&lt;strong&gt;UIColor&lt;/strong&gt; 生成随机颜色的 &lt;strong&gt;random()&lt;/strong&gt; 这个方法就是最开始导入的程序文件中的快捷方法中的一个。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注：你将在本书（视频）的第二章学习更多有关材料以及它的属性的内容。这里你可以简单理解：要改变一个物体的颜色，可以用给材料的 &lt;strong&gt;diffuse[&lt;sup&gt;1]&lt;/sup&gt;&lt;/strong&gt; 属性的 &lt;code&gt;contents&lt;/code&gt; 设置为一个 UIColor 的方式。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;最终，编译并运行游戏，来看一眼这个美丽的上了颜色的几何体吧：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-20-14630408650976.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;哎呀，如果能同时生成多个几何体该多好呀？当然可以……在学习完下一节课程之后！:]&lt;/p&gt;
+
+&lt;h2&gt;接下来怎么办？&lt;/h2&gt;
+
+&lt;p&gt;这里是&lt;a href=&quot;https://github.com/FangYiXiong/GeometryFighter/archive/part-3-finished.zip&quot;&gt;完成后的代码&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;就目前而言，您应该继续阅读本系列教程的&lt;a href=&quot;http://iOSinit.com/scenekit-03&quot;&gt;第四节&lt;/a&gt;，在第四节中，你将学习有关 SceneKit 中有关渲染循环的知识，并让你的几何体不断重生。&lt;/p&gt;
+
+&lt;p&gt;本节视频教程：&lt;a href=&quot;&quot;&gt;地址&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;免费直播教程：&lt;a href=&quot;http://www.swiftv.cn/course/inen5bqr&quot;&gt;直播地址&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;译者注：如果您刚开始学习 iOS 开发，希望系统地学习并得到及时的指导，可以考虑来购买我的视频教程：&lt;a href=&quot;http://iosinit.com/ios-3d-games/&quot;&gt;「从零开始」学习 3D iOS游戏编程&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;这一教程基于本文提及的&lt;a href=&quot;https://www.raywenderlich.com/store/3d-ios-games-by-tutorials&quot;&gt;《3D iOS 游戏教程》&lt;/a&gt;这本书，将会教给你制作 3D iOS 游戏中所需要知道的一切知识，在这个过程中你将从头开始制作一系列类似于&lt;a href=&quot;(https://itunes.apple.com/cn/app/fruit-ninja/id362949845?mt=8)&quot;&gt;水果忍者&lt;/a&gt;、经典的敲砖块，甚至苹果 WWDC 上和 Apple TV 一起首发的游戏 —— &lt;a href=&quot;https://itunes.apple.com/us/app/crossy-road-endless-arcade/id924373886?mt=8&quot;&gt;Crossy Road&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;于此同时，如果您有任何问题，欢迎在微博上 &lt;a href=&quot;http://weibo.com/fangyixiong&quot;&gt;@方一雄&lt;/a&gt; 给我留言或私信。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;[&lt;sup&gt;1]:&lt;/sup&gt; &lt;strong&gt;Diffuse&lt;/strong&gt; 来自官方文档的解释：Diffuse shading describes the amount and color of light reflected equally in all directions from each point on the material’s surface. The diffuse color of a pixel is independent of the point of view, so it can be thought of as a material’s “base” color or texture.&lt;/p&gt;
+</description>
+        <pubDate>Fri, 20 May 2016 14:09:37 +0800</pubDate>
+        <link>http://vno.onevcat.com/2016/05/scenekit-03/</link>
+        <guid isPermaLink="true">http://vno.onevcat.com/2016/05/scenekit-03/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>「从零开始」做一个水果忍者那样的游戏（Scene Kit 基础教程）第 2 节：节点</title>
+        <description>&lt;p&gt;原文：&lt;a href=&quot;https://www.raywenderlich.com/128681/scene-kit-tutorial-swift-part-2-nodes&quot;&gt;Scene Kit Tutorial with Swift Part 2: Nodes&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注：这是&lt;a href=&quot;https://www.raywenderlich.com/store/3d-ios-games-by-tutorials&quot;&gt;《3D iOS 游戏教程》&lt;/a&gt;这本书中一个章节的缩写版，来让您可以来领略一下这本书的内容。希望您喜欢！&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-Thumb.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;这一教程将向你展示如何使用苹果最新的游戏框架－SceneKit，来创建你的第一个 3D 游戏。&lt;/p&gt;
+
+&lt;p&gt;在这个一共 5 节的系列教程中，你将会创建你的第一个 SceneKit 游戏：&lt;strong&gt;几何忍者（GeometryFighter）&lt;/strong&gt;！这是一个类似于&lt;strong&gt;&lt;a href=&quot;https://itunes.apple.com/cn/app/fruit-ninja/id362949845?mt=8&quot;&gt;水果忍者&lt;/a&gt;&lt;/strong&gt;那样的游戏，你来摧毁不断涌上屏幕的几何体来满足自己内心的破坏欲:]&lt;/p&gt;
+
+&lt;p&gt;下面是本系列教程文章的导航及简介：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-01&quot;&gt;第 1 节&lt;/a&gt;，你将会学习到如何新建一个空白的 SceneKit 工程做为一个好的开始。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-02&quot;&gt;第 2 节&lt;/a&gt;，开始编写游戏，并学习有关 SceneKit 节点的知识。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-03&quot;&gt;第 3 节&lt;/a&gt;，学习如何使用 SceneKit 内置的物理引擎来移动你的几何体。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-04&quot;&gt;第 4 节&lt;/a&gt;，学习有关 SceneKit 中有关渲染循环的知识，并让你的几何体不断重生。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在最后的&lt;a href=&quot;http://iOSinit.com/scenekit-05&quot;&gt;第 5 节&lt;/a&gt;中，你将学习如何将一些非常酷的粒子效果添加到游戏中。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;在&lt;a href=&quot;http://iOSinit.com/scenekit-01&quot;&gt;上一节&lt;/a&gt;的学习中，我们了解了如何新建一个空白的 SceneKit 工程做为一个好的开始。&lt;/p&gt;
+
+&lt;p&gt;在本节的教程里，我们将开始编写游戏，在这个过程中学习有关&lt;strong&gt;节点（Node）&lt;/strong&gt;的知识。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;本篇教程从上一节教程结束的地方开始。如果你没有跟上，不要着急 ———— 你可以从这里下载本次教程的&lt;a href=&quot;https://github.com/FangYiXiong/GeometryFighter/archive/part-1-finished.zip&quot;&gt;开始程序包&lt;/a&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;开始&lt;/h2&gt;
+
+&lt;p&gt;Scene Kit 中把所有游戏中的元素以一种&lt;strong&gt;场景图（scene graph）&lt;/strong&gt;的方式组织起来。&lt;/p&gt;
+
+&lt;p&gt;每一个游戏中的元素（比如灯光、摄像头、粒子发射器等）都被称为一个个的&lt;strong&gt;节点（node）&lt;/strong&gt;存储在这种树形结构中。&lt;/p&gt;
+
+&lt;p&gt;为了说明它的工作原理，我们来看看下面这张图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-03-14621827798929.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;为了进行类比，我们把上面这个图中每一个骨头都想象成一个&lt;strong&gt;节点（node）&lt;/strong&gt;。最大的骨头是脊柱，我们认为它是所有骨头的根源，所以它就是&lt;strong&gt;根节点（root node）&lt;/strong&gt;。肩骨是连接在脊柱上的，所以我们认为肩骨是脊柱的&lt;strong&gt;子（child）&lt;/strong&gt;节点，而脊柱则是肩骨的&lt;strong&gt;父（parent）&lt;/strong&gt;节点。&lt;/p&gt;
+
+&lt;p&gt;同理可知，大臂的骨头是肩骨的子节点，小臂的骨头是大臂骨头的子节点，手指的骨头是小臂的骨头的子节点。&lt;/p&gt;
+
+&lt;p&gt;每一个节点的位置都是相对于它的父节点的。比如，如图中右边所示，要想挥动骷髅的左边的手臂，我们只需要像蓝色箭头这样旋转他的大臂的骨头，所有的子节点（小臂、手指）都会跟着一起旋转了。&lt;/p&gt;
+
+&lt;p&gt;恭喜你！你刚刚学习完了人体解剖学的入门课程！:]&lt;/p&gt;
+
+&lt;h3&gt;代码中的节点&lt;/h3&gt;
+
+&lt;p&gt;从技术的角度来看，一个节点的类型是 &lt;strong&gt;SCNNode&lt;/strong&gt;，它代表了在三维空间中相对于父节点的位置。节点本身并不包含任何可以显示的内容，在渲染到场景上之后也会消失不见。为了创建可以显示的内容，你需要将其他的组件，比如灯光、摄像机或者几何体（比如骨头）添加到节点上。&lt;/p&gt;
+
+&lt;p&gt;场景图中有一个特殊的节点形成了整个节点层级结构的基础，它就是&lt;strong&gt;根节点（root node）&lt;/strong&gt;。为了构建游戏场景，我们把节点做为子节点要么加入到根节点中，要么就加入到根节点的其它子节点中。&lt;/p&gt;
+
+&lt;h2&gt;Scene Kit 中的资源目录（Asset Catalog）&lt;/h2&gt;
+
+&lt;p&gt;如果有一天你变成了成功又有钱的 3D 游戏设计者，你可以自己雇佣图形设计师以及音效工程师，这样你就可以把时间全部用来专心致志地写游戏代码了。:] Scene Kit 中的&lt;strong&gt;资源目录（Asset Catalog）&lt;/strong&gt;就是设计来专门帮你处理这些代码之外的游戏资源的。&lt;/p&gt;
+
+&lt;p&gt;资源目录（Asset Catalog）让我们可以一个单独的文件夹里管理所有的游戏资源；使用它只需要我们在工程中新建一个以 &lt;strong&gt;.scnassets&lt;/strong&gt; 为扩展名的文件夹，然后把所有的游戏资源文件放在那个文件夹里就可以了。Xcode 在编译的时候会自动把所有这个目录下的文件拷贝程序包里，并且保留你文件夹里的层级结构。&lt;/p&gt;
+
+&lt;p&gt;这样做的好处在于，你只需要把资源目录文件夹共享给设计师，如果有什么需要修改的问题（比如某只 不-是-那-么-凶-的-重-眼-怪），他们直接在上面修改之后，效果就会出现在你下一次编译的时候了，不需要来回拷来拷去的。&lt;/p&gt;
+
+&lt;p&gt;现在你应该明白资源目录的作用是什么了，很快你就要在几何忍者中添加一个这样的目录。&lt;/p&gt;
+
+&lt;p&gt;把教程&lt;a href=&quot;https://github.com/FangYiXiong/GeometryFighterResources/archive/1.0.zip&quot;&gt;资源文件包&lt;/a&gt;中的 &lt;strong&gt;GeometryFighter.scnassets&lt;/strong&gt; 文件夹拖拽到 Xcode 的游戏工程里。在弹出的窗口中，确保 &lt;strong&gt;Copy items if needed&lt;/strong&gt;、&lt;strong&gt;Create Groups&lt;/strong&gt;，以及 Add to targets 中的 &lt;strong&gt;GeometryFighter&lt;/strong&gt; 是选中状态，然后点击 &lt;strong&gt;Finish&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-14619198673738.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;在项目的导航中选择 &lt;strong&gt;GeometryFighter.scnassets&lt;/strong&gt; 这个文件夹，你会注意到在右边的面板中出现了一些独有的选项。展开GeometryFighter.scnassets 及它的子文件夹来查看更多细节：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-14619201167460.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;你会看到在资源目录下有两个文件夹：&lt;strong&gt;Sounds&lt;/strong&gt;（声音）文件夹包含了游戏所需的声音文件，&lt;strong&gt;Textures&lt;/strong&gt;（纹理）文件夹包含了所需的图像。你可以尽情地看看都是些什么内容。&lt;/p&gt;
+
+&lt;h3&gt;添加启动屏幕&lt;/h3&gt;
+
+&lt;p&gt;我们刚刚添加好了资源目录，现在需要做一些整理工作，并添加一张合适的图片做为启动屏幕。&lt;/p&gt;
+
+&lt;p&gt;首先，在项目的导航栏中单击 &lt;strong&gt;Assets.xcassets&lt;/strong&gt;，把&lt;strong&gt;GeometryFighter.scnassets\Textures\Logo_Diffuse.png&lt;/strong&gt; 这个文件拖进资源里，就放在 &lt;strong&gt;AppIcon&lt;/strong&gt; 的下面。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-14619205512274.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;下一步，点击导航栏中的 &lt;strong&gt;LaunchScreen.storyboard&lt;/strong&gt;。选中 &lt;strong&gt;View&lt;/strong&gt;，在右边的属性设置栏中，把 &lt;strong&gt;Background&lt;/strong&gt;（背景）这个属性设置为深蓝色（或者任何你喜欢的颜色），如下图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-14619206722893.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;下一步，将 &lt;strong&gt;Logo_Diffuse&lt;/strong&gt; 这张图片从 &lt;strong&gt;Media Library&lt;/strong&gt;（媒体库）拖到视图的正中。把这张图片的 &lt;strong&gt;Mode&lt;/strong&gt;（拉伸模式）属性设置为 &lt;strong&gt;Aspect Fit&lt;/strong&gt;（等比例缩放），如下图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-14619209162851.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;干的漂亮，就还差一点点就完成了。现在我们需要添加一些约束来保证图片在所有 iOS 设备上的正常显示。在底部点击 &lt;strong&gt;Pin&lt;/strong&gt; 这个按钮，把四个边的约束都点亮，然后点击底部的 &lt;strong&gt;Add 4 Constraints&lt;/strong&gt;的按钮，如图所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-14619210793978.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;这样我们就添加好了启动屏幕！编译并运行程序；你会看到一个崭新的启动屏幕：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-14619211674625.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;h3&gt;添加背景图片&lt;/h3&gt;
+
+&lt;p&gt;炫酷的启动画面一消失，你就又被扔回到了命运的黑色大门前。现在是时候添加一个漂亮的背景了，这样你就不会感觉自己在盯着一个黑洞了。&lt;/p&gt;
+
+&lt;p&gt;为了完成这个，打开 &lt;strong&gt;GameViewController.swift&lt;/strong&gt; 这个文件，将下面这行代码添加到&lt;code&gt;配置场景()&lt;/code&gt;这个方法的底部：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;scn场景.background.contents = &amp;quot;GeometryFighter.scnassets/Textures/Background_Diffuse.png&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这行代码告诉我们的场景去加载资源目录中一个名为 &lt;strong&gt;Background_Diffuse.png&lt;/strong&gt; 的图片，使用它来做我们的背景。&lt;/p&gt;
+
+&lt;p&gt;编译并运行；游戏运行后你将看到一个蓝色的背景图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-14619218206030.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;你现在已经完成了基本的清理工作。你的游戏现在有了一个闪亮的图标、一个耀眼的启动图，外加一个非常漂亮的背景！接下来我们要准备向上面添加并显示&lt;strong&gt;节点（Node）&lt;/strong&gt;了。&lt;/p&gt;
+
+&lt;h2&gt;Scene Kit 的坐标系&lt;/h2&gt;
+
+&lt;p&gt;在开始添加节点之前，你首先需要理解 Scene Kit 的坐标系的有关知识，这样你才能把节点放到想要的位置上。&lt;/p&gt;
+
+&lt;p&gt;在诸如 UIKit 和 Sprite Kit 这样的 2D 系统中，你使用一个包含 X 坐标和 Y 坐标的点来描述一个视图（view）或者一个精灵（sprite）的位置。而在三维的空间里，为了确定一个物体的位置，你还需要一个 Z 轴的坐标来描述物体的深度。&lt;/p&gt;
+
+&lt;p&gt;来看下面这个示意图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-03-14619846843863.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Scene Kit 使用这种三个轴的坐标系来描述一个物体在三维空间中的位置。红色的方块放置在 X 轴上，绿色的方块放置在了 Y 轴，蓝色的方块放置在了 Z 轴。正中间的灰色的方块代表了&lt;strong&gt;原点（origin）&lt;/strong&gt;，坐标为&lt;strong&gt;（x:0, y:0, z:0）&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;Scene Kit 使用 &lt;strong&gt;SCNVetor3&lt;/strong&gt; 这种包含三个向量的数据类型来代表三维空间中的坐标。在代码中我们这样写：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;let 位置 = SCNVector3(x:0, y:5, z:10)
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这里，我们使用向量 &lt;strong&gt;(x:0, y:5, z:10)&lt;/strong&gt; 来声明了一个变量&lt;code&gt;位置&lt;/code&gt;。可以使用下面这种方法来轻松地得到每个坐标的数值：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;let x = 位置.x
+let y = 位置.y
+let z = 位置.z
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;如果你以前使用过&lt;code&gt;CGPoint&lt;/code&gt;，那么你应该可以很容易地看出 &lt;code&gt;SCNVetor3&lt;/code&gt; 和它的类似之处。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注：节点（Node）加入到场景的时候有一个默认的位置是 &lt;strong&gt;(x:0, y:0, z:0)&lt;/strong&gt;，记住这里的位置都是指相对于&lt;strong&gt;父节点&lt;/strong&gt;而言的。为了把一个节点放置在指定的位置上，我们需要调整其相对于它的父节点（亦称为本地坐标）的位置，而不是相对于原点（世界坐标）的位置。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;摄像机的工作原理&lt;/h2&gt;
+
+&lt;p&gt;理解了如何在 Scene Kit 中放置节点之后，你可能很好奇如何真正把内容&lt;strong&gt;显示&lt;/strong&gt;在屏幕上。想一下第 1 章中关于拍电影的类比：拍电影的时候，场景上有各种演员和道具，然后我们会放置一个摄像机来拍摄场景，所以最终出来的影像什么样取决于摄像机的位置，我们看到的也是摄像机的视角。&lt;/p&gt;
+
+&lt;p&gt;Scene Kit 的工作原理也是类似的。包含&lt;strong&gt;摄像机（camera）&lt;/strong&gt;的那个节点的位置决定了我们看场景的视角。&lt;/p&gt;
+
+&lt;p&gt;下面这个示意图说明了摄像机是如何工作的：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-03-14619868670628.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;图中有几个关键术语需要解释一下：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;摄像机拍摄的方向永远是其所在节点位置的&lt;strong&gt;负的 Z 轴&lt;/strong&gt;方向。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;视野（Field of View）&lt;/strong&gt;是摄像机的可视区域的极限角度。角度越小，视野越窄，反之，角度越大，视野越宽。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;视锥体（viewing frustum）&lt;/strong&gt;决定着摄像头可视区域的深度（Z 轴表示深度）。任何不在这个区域内的物体将被剪裁掉（离摄像头太近或者太远），不会显示在最终的画面中。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Scene Kit 中 &lt;code&gt;SCNCamera&lt;/code&gt; 这个类就代表了摄像头，它有几个属性，其中 &lt;code&gt;xPov&lt;/code&gt; 和 &lt;code&gt;yPov&lt;/code&gt; 用来调整视野，&lt;code&gt;zNear&lt;/code&gt; 和 &lt;code&gt;zFar&lt;/code&gt; 用来调整视锥体。&lt;/p&gt;
+
+&lt;p&gt;另外，有一点很关键要记住，那就是摄像头只有附属于某个节点时才发挥作用，只有其本身不会做任何事情。&lt;/p&gt;
+
+&lt;h2&gt;添加摄像头&lt;/h2&gt;
+
+&lt;p&gt;现在我们来试试摄像头。打开 &lt;strong&gt;GameViewController.swift&lt;/strong&gt; 这个文件，在 &lt;code&gt;scn场景&lt;/code&gt; 的下面再添加一个属性：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;var 摄像头节点: SCNNode!
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;接下来，在&lt;code&gt;配置场景()&lt;/code&gt;方法的下面再添加一个新方法：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;func 配置摄像头() {
+  // 1
+  摄像头节点 = SCNNode()
+  // 2
+  摄像头节点.camera = SCNCamera()
+  // 3
+  摄像头节点.position = SCNVector3(x: 0, y: 0, z: 10)
+  // 4
+  scn场景.rootNode.addChildNode(摄像头节点)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;我们来看一下这些代码：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;首先创建一个空的节点 &lt;code&gt;SCNNode&lt;/code&gt; 并把它赋值给了变量 &lt;code&gt;摄像头节点&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;然后创建一个新的 &lt;code&gt;SCNCamera&lt;/code&gt; 对象并把它赋值给了 &lt;code&gt;摄像头节点&lt;/code&gt; 的 &lt;code&gt;camera&lt;/code&gt; 这个属性。&lt;/li&gt;
+&lt;li&gt;然后设置 &lt;code&gt;摄像头节点&lt;/code&gt; 的位置为 &lt;strong&gt;(x:0, y:0, z:10)&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;最后，把&lt;code&gt;摄像头节点&lt;/code&gt;作为子节点加入到场景的根节点中。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;然后我们在 &lt;code&gt;viewDidLoad()&lt;/code&gt; 这个方法中调用刚刚添加的这个新方法，在 &lt;code&gt;配置场景&lt;/code&gt; 这行的下面再添加一行代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;配置摄像头()
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;完成这一步之后并不需要立即运行，因为这时候你看不到什么变化。现在我们的场景中的确添加了摄像头，但是并没有什么东西可供我们拍摄。接下来，为了解决这个问题，让我们添加一些演员到场景来。&lt;/p&gt;
+
+&lt;h2&gt;了解几何体&lt;/h2&gt;
+
+&lt;p&gt;为了创建可见的内容，我们需要把几何体添加到节点中。一个几何体代表了一个三维立体的形状，由无数个&lt;strong&gt;交点（Vertices）&lt;/strong&gt;构成。&lt;/p&gt;
+
+&lt;p&gt;另外，一个几何体可以使用不同的材料来装饰它的表面。&lt;strong&gt;材料（Material）&lt;/strong&gt;可以让我们指定物体表面的颜色、材质、对光的敏感度等一系列的视觉效果。一系列交点和材料的组合被称为一个&lt;strong&gt;模型（Model）&lt;/strong&gt;或是一个&lt;strong&gt;网（Mesh）&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;Scene Kit 内置了一系列的几何体，也被称为&lt;strong&gt;原型（Primitives）&lt;/strong&gt;：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-03-14621755013065.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;前排从左到右是：圆锥体（cone）、圆环体（torus）、胶囊体（capsule）、水管体（tube）。后排从左到右分别是：锥体（pyramid）、立方体（box）、球体（sphere）和圆柱体（cylinder）。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;你可以提供自定义的几何体，在之后的章节中将会教你如何去做。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3&gt;添加形状&lt;/h3&gt;
+
+&lt;p&gt;在把几何体添加进场景之前，我们需要创建一个新的 Swift 文件来声明一个名为&lt;code&gt;形状&lt;/code&gt;的枚举用来定义游戏中用到的各种不同的几何体形状。&lt;/p&gt;
+
+&lt;p&gt;右键单击 &lt;strong&gt;GeometryFighter&lt;/strong&gt; 这个组，然后选择 &lt;strong&gt;New File&lt;/strong&gt;……选择 &lt;strong&gt;iOS\Source\Swift File&lt;/strong&gt; 这个模版，然后单击 &lt;strong&gt;Next&lt;/strong&gt;：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-03-14621769376582.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;把这个文件命名为&lt;strong&gt;形状.swift&lt;/strong&gt;，确保其包含在工程文件里，然后单击 &lt;strong&gt;Create&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;文件创建好了之后，打开&lt;strong&gt;形状.swift&lt;/strong&gt;，把文件里的内容替换为下列代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;import Foundation
+ 
+// 1
+public enum 形状:Int {
+ 
+  case 立方体 = 0
+  case 球体
+  case 锥体
+  case 圆环体
+  case 胶囊体
+  case 圆柱体
+  case 圆锥体
+  case 水管体
+ 
+  // 2
+  static func 随机() -&amp;gt; 形状 {
+    let 最大值 = 水管体.rawValue
+    let 随机 = arc4random_uniform(UInt32(最大值+1))
+    return 形状(rawValue: Int(随机))!
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;上述代码的意思相当直白：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;定义一个公有的枚举&lt;code&gt;形状&lt;/code&gt;代表不同的几何体类型。&lt;/li&gt;
+&lt;li&gt;定义了一个静态的方法&lt;code&gt;随机()&lt;/code&gt;用来生成随机的形状。这个方法之后会很有用。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;添加几何体&lt;/h3&gt;
+
+&lt;p&gt;下面的任务就是创建一个方法来随机生成&lt;strong&gt;形状&lt;/strong&gt;这个枚举中所定义的几何体类型。&lt;/p&gt;
+
+&lt;p&gt;在下面的方法添加到 &lt;strong&gt;GameViewController.swift&lt;/strong&gt; 中，就放到 &lt;code&gt;配置摄像头()&lt;/code&gt; 的下面：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;func 生成几何体() {
+    // 1
+    var 几何体: SCNGeometry
+    // 2
+    switch 形状.随机() {
+    default:
+        // 3
+        几何体 = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.0)
+    }
+    // 4
+    let 几何体节点 = SCNNode(geometry: 几何体)
+    // 5
+    scn场景.rootNode.addChildNode(几何体节点)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;下面按照注释的顺序一个个地来解释：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;首先，声明一个变量&lt;code&gt;几何体&lt;/code&gt;备用。&lt;/li&gt;
+&lt;li&gt;接下来，使用一个 &lt;strong&gt;switch&lt;/strong&gt; 语句来处理 &lt;code&gt;形状.随机()&lt;/code&gt; 这个方法的返回值。现在这里的代码还不完整，只会生成一个正方体。在文章结尾的挑战中，需要你把它来补充完整。&lt;/li&gt;
+&lt;li&gt;然后创建一个 &lt;code&gt;SCNBox&lt;/code&gt; 立方体的对象并把它存储在&lt;code&gt;几何体&lt;/code&gt;中。这里要指定它的宽、高、长，以及斜面角度（也就是所谓的圆角，只不过换了个更高大上的说法）。&lt;/li&gt;
+&lt;li&gt;这一行我们创建了一个&lt;code&gt;SCNNode&lt;/code&gt;的节点的对象并把它命名为&lt;code&gt;几何体节点&lt;/code&gt;，这次我们使用的是带 &lt;code&gt;geometry&lt;/code&gt; 参数的初始化方法，这样生成的节点会自动跟我们提供的几何体链接起来。&lt;/li&gt;
+&lt;li&gt;最后，我们把创建好的几何体节点添加到场景中。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;现在，我们需要在程序的某处来调用这个方法。在 &lt;code&gt;viewDidLoad()&lt;/code&gt; 中，紧挨着&lt;code&gt;配置摄像头()&lt;/code&gt;这一行的下面，添加下面的代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;生成几何体()
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;编译并运行；你会发现屏幕中显示了一个白色的方块。如下图所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-03-14621793013917.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;这里我们可以看到几点：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;这个立方体节点是&lt;code&gt;生成几何体&lt;/code&gt;生成的默认的形状，在场景中位于 &lt;strong&gt;(x:0, y:0, z:0)&lt;/strong&gt; 的位置。&lt;/li&gt;
+&lt;li&gt;你正在从之前创建的&lt;code&gt;摄像头节点&lt;/code&gt;所在的位置观察这个场景。由于摄像头节点的位置在 &lt;strong&gt;(x:0, y:0, z:10)&lt;/strong&gt;，所以这个立方体刚好就处在我们摄像头视野的正中间。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;没错，我知道这看起来一点也不令人兴奋（而且看上去也不像是 3D 的），但是别着急——下一节会改变一切。&lt;/p&gt;
+
+&lt;h2&gt;使用内置的 3D 图形浏览器&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;SCNView&lt;/code&gt; 内置了一些可以直接拿来使用的功能来让我们的工作轻松一些。&lt;/p&gt;
+
+&lt;p&gt;来到 &lt;strong&gt;GameViewController.swift&lt;/strong&gt; 这个文件，在&lt;code&gt;配置视图()&lt;/code&gt;这个方法的最后，增加以下的代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;// 1
+scn视图.showStatistics = true
+// 2
+scn视图.allowsCameraControl = true
+// 3
+scn视图.autoenablesDefaultLighting = true
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;下面来解释一下上面的代码在干嘛：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;showStatistics&lt;/strong&gt; 会在底部打开一个实时的统计数据的面板。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;allowsCameraControl&lt;/strong&gt; 允许用户使用简单的手势来控制摄像机。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;autoenablesDefaultLighting&lt;/strong&gt; 会自动给我们的场景添加一个全方向的灯光，这样暂时我们就不需要自己来添加灯光了。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;编译并运行；这次事情开始变得有趣起来了！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-05-03-14621814916855.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;你可以使用以下的手势来控制场景中活动的摄像机：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;单手指滑动&lt;/strong&gt;：围绕着物体旋转你的摄像机。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;两只手指滑动&lt;/strong&gt;：上下左右移动你的摄像机。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;两只手指缩放&lt;/strong&gt;：拉近或拉远你的摄像机。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;双击&lt;/strong&gt;：如果你的场景中有两个或以上的摄像机，这个动作会在不同的摄像机之间进行切换。当然，在本例中，我们只有一个摄像机，所以不会进行切换。但这个手势在切换的同时也会把摄像机的状态重设回最初的状态。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;挑战&lt;/h2&gt;
+
+&lt;p&gt;在本节的最后，我们留了一个挑战任务来供你实践学习到的知识：完善 &lt;code&gt;生成几何体()&lt;/code&gt; 中的 &lt;strong&gt;switch&lt;/strong&gt; 语句，来处理其它的几何体类型。&lt;/p&gt;
+
+&lt;p&gt;在苹果官方的 &lt;a href=&quot;https://developer.apple.com/library/ios/documentation/SceneKit/Reference/SCNGeometry_Class/index.html#//apple_ref/occ/cl/SCNGeometry&quot;&gt;Scene Kit 文档&lt;/a&gt;中查看更多关于不同几何体的说明。同时看看&lt;code&gt;形状&lt;/code&gt;这个枚举中的各种类型的名字，应该可以给你足够的提示来开始。&lt;/p&gt;
+
+&lt;p&gt;不用太担心尺寸的问题；试试让它们看起来跟之前的正方体差不多大小就可以。&lt;/p&gt;
+
+&lt;p&gt;如果你完成了挑战，那么恭喜你！你已经牢牢掌握了 Scene Kit 中最基本的一些概念了！&lt;/p&gt;
+
+&lt;h2&gt;接下来怎么办？&lt;/h2&gt;
+
+&lt;p&gt;这里是&lt;a href=&quot;https://github.com/FangYiXiong/GeometryFighter/archive/part-2-finished.zip&quot;&gt;完成 Demo 后的代码&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;这里是&lt;a href=&quot;https://github.com/FangYiXiong/GeometryFighter/archive/part-2-challenge-finished.zip&quot;&gt;完成挑战后的代码&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;就目前而言，您应该继续阅读本系列教程的&lt;a href=&quot;http://iOSinit.com/scenekit-03&quot;&gt;第三节&lt;/a&gt;，在第三节中，我们将学习如何使用物理引擎让几何体动起来。&lt;/p&gt;
+
+&lt;p&gt;本节视频教程：&lt;a href=&quot;http://&quot;&gt;地址&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;免费直播教程：&lt;a href=&quot;http://www.swiftv.cn/course/inen5bqr&quot;&gt;直播地址&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;译者注：如果您刚开始学习 iOS 开发，希望系统地学习并得到及时的指导，可以考虑来购买我的视频教程：&lt;a href=&quot;http://iosinit.com/ios-3d-games/&quot;&gt;「从零开始」学习 3D iOS游戏编程&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;这一教程基于本文提及的&lt;a href=&quot;https://www.raywenderlich.com/store/3d-ios-games-by-tutorials&quot;&gt;《3D iOS 游戏教程》&lt;/a&gt;这本书，将会教给你制作 3D iOS 游戏中所需要知道的一切知识，在这个过程中你将从头开始制作一系列类似于&lt;a href=&quot;(https://itunes.apple.com/cn/app/fruit-ninja/id362949845?mt=8)&quot;&gt;水果忍者&lt;/a&gt;、经典的敲砖块，甚至苹果 WWDC 上和 Apple TV 一起首发的游戏 —— &lt;a href=&quot;https://itunes.apple.com/us/app/crossy-road-endless-arcade/id924373886?mt=8&quot;&gt;Crossy Road&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;于此同时，如果您有任何问题，欢迎在微博上 &lt;a href=&quot;http://weibo.com/fangyixiong&quot;&gt;@方一雄&lt;/a&gt; 给我留言或私信。&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Tue, 03 May 2016 07:08:18 +0800</pubDate>
+        <link>http://vno.onevcat.com/2016/05/scenekit-02/</link>
+        <guid isPermaLink="true">http://vno.onevcat.com/2016/05/scenekit-02/</guid>
+        
+        <category>3d-game</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>「从零开始」做一个水果忍者那样的游戏（Scene Kit 基础教程）第 1 节：开始</title>
+        <description>&lt;p&gt;原文：&lt;a href=&quot;https://www.raywenderlich.com/128668/scene-kit-tutorial-with-swift-part-1&quot;&gt;Scene Kit Tutorial with Swift Part 1: Getting Started&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注：这是&lt;a href=&quot;https://www.raywenderlich.com/store/3d-ios-games-by-tutorials&quot;&gt;《3D iOS 游戏教程》&lt;/a&gt;这本书中一个章节的缩写版，来让您可以来领略一下这本书的内容。希望您喜欢！&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-Thumb.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;这一教程将向你展示如何使用苹果最新的游戏框架－SceneKit，来创建你的第一个 3D 游戏。&lt;/p&gt;
+
+&lt;p&gt;如果在你的想象中，认为 3D 游戏编程要远比 2D 游戏编程复杂的多，这种偏见是可以被谅解的。因为 3D 游戏编程通常涉及许多复杂的数学计算，所有一直有一个名声 —— 就是 TMD 很难。&lt;/p&gt;
+
+&lt;p&gt;但是，现在不同了，感谢苹果的 3D 游戏框架－SceneKit！由于 SceneKit 的简单易学，现在即使是初学者也可以在很短的时间内做出一款简洁而又优雅的 3D 游戏了。&lt;/p&gt;
+
+&lt;p&gt;在这个一共 5 节的系列教程中，你将会创建你的第一个 SceneKit 游戏：&lt;strong&gt;几何忍者（GeometryFighter）&lt;/strong&gt;！这是一个类似于&lt;strong&gt;&lt;a href=&quot;https://itunes.apple.com/cn/app/fruit-ninja/id362949845?mt=8&quot;&gt;水果忍者&lt;/a&gt;&lt;/strong&gt;那样的游戏，你来摧毁不断涌上屏幕的几何体来满足自己内心的破坏欲:]&lt;/p&gt;
+
+&lt;p&gt;下面是本系列教程文章的导航及简介：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-01&quot;&gt;第 1 节&lt;/a&gt;，你将会学习到如何新建一个空白的 SceneKit 工程做为一个好的开始。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-02&quot;&gt;第 2 节&lt;/a&gt;，开始编写游戏，并学习有关 SceneKit 节点的知识。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-03&quot;&gt;第 3 节&lt;/a&gt;，学习如何使用 SceneKit 内置的物理引擎来移动你的几何体。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://iOSinit.com/scenekit-04&quot;&gt;第 4 节&lt;/a&gt;，学习有关 SceneKit 中有关渲染循环的知识，并让你的几何体不断重生。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在最后的&lt;a href=&quot;http://iOSinit.com/scenekit-05&quot;&gt;第 5 节&lt;/a&gt;中，你将学习如何将一些非常酷的粒子效果添加到游戏中。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;让我们开始吧！&lt;/p&gt;
+
+&lt;p&gt;在本节中，我们只需要简单地从头创建一个空白的工程做为一个开始，这很适合希望从头开始并理解每一个步骤的同学。如果你更喜欢直接开始写代码，可以跳到系列的&lt;a href=&quot;http://iOSinit.com/scenekit-02&quot;&gt;第二节(待更新)&lt;/a&gt;，在那里我们为你准备了一个开始程序包。&lt;/p&gt;
+
+&lt;h2&gt;开始&lt;/h2&gt;
+
+&lt;p&gt;打开 XCode 并在主菜单上选择 &lt;strong&gt;File\New\Project&lt;/strong&gt;。如果你想成为（或者看上去）一个 XCode 忍者，也可以使用快捷键：&lt;strong&gt;⇧⌘N&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;在左边选择 &lt;strong&gt;iOS\Application\Game&lt;/strong&gt; 这个模版，并点击 &lt;strong&gt;Next&lt;/strong&gt; 来继续：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-14616520505605.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;现在你给你的项目配置一些信息。在 Product Name（产品名称） 这一行输入&lt;strong&gt;GeometryFighter&lt;/strong&gt;，Language（语言） 这里选择 &lt;strong&gt;Swift&lt;/strong&gt;，Game Technology（游戏技术） 选择 &lt;strong&gt;SceneKit&lt;/strong&gt;，Devices（设备） 选择 &lt;strong&gt;Universal&lt;/strong&gt;，不勾选最后两个复选框，然后单击 &lt;strong&gt;Next&lt;/strong&gt;：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-s001.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;最后一步是选择一个方便的地方存储你的项目。选择一个目录，并单击 &lt;strong&gt;Create&lt;/strong&gt;；XCode 将施展它的魔法来生成你的项目。&lt;/p&gt;
+
+&lt;h2&gt;创建你的 SceneKit 游戏项目&lt;/h2&gt;
+
+&lt;p&gt;现在你已经从模版生成了 SceneKit 的游戏工程，你现在应该很想看看运行起来什么样子！:]&lt;/p&gt;
+
+&lt;p&gt;首先，在上方的工具栏中，选择 &lt;strong&gt;iPhone 6s&lt;/strong&gt; 模拟器，然后点击左边的&lt;strong&gt;播放&lt;/strong&gt;按钮（就是一个向右的三角形，我们平时播放音乐和电影时常见的那种）来运行你的程序。XCode 忍者们可以直接按快捷键 &lt;strong&gt;⌘R&lt;/strong&gt;：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-s02.png&quot; alt=&quot;&quot;&gt;￼&lt;/p&gt;
+
+&lt;p&gt;等待一会之后，你的第一个 3D 的 SceneKit 游戏就将出现了，如下图所示。你可以在游戏中旋转你的 3D 宇宙飞船。只需要简单地在屏幕上向不同的方向上拖拽，就可以改变摄像头的角度：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-14616538389346.png&quot; alt=&quot;&quot;&gt;￼&lt;/p&gt;
+
+&lt;p&gt;哇哦！现在可以休息一会并在你的座位上跳个《小苹果》了，然后我们继续剩下的教程。&lt;/p&gt;
+
+&lt;h2&gt;清空你的游戏程序&lt;/h2&gt;
+
+&lt;p&gt;现在为了有一个空白的 SceneKit 游戏项目，我们需要把现有的一些文件和代码删除掉。不用担心；你将从头开始一步一步地重新来编写它们，这样你就可以知道这些代码和文件是怎么来的了。&lt;/p&gt;
+
+&lt;h3&gt;删除不必要的文件夹&lt;/h3&gt;
+
+&lt;p&gt;首先要删除的是 &lt;strong&gt;art.scnassets&lt;/strong&gt; 这个文件夹。右键单击它，然后选择 &lt;strong&gt;Delete（删除）&lt;/strong&gt;，然后单击 &lt;strong&gt;Move to Trash（扔到回收站）&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-14616541859646.png&quot; alt=&quot;&quot;&gt;￼&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注：现在不用太担心 &lt;strong&gt;art.scnassets&lt;/strong&gt; 这个文件夹的用处。只需要知道是 XCode 的 SceneKit 游戏模版自动为我们生成了它。保持你的工程文件的整洁总是没错的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;清理主工程文件&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;GameViewController.swift&lt;/strong&gt; 是整个游戏的关键文件；我们所有游戏的逻辑代码都将放在这里。在我们开始编程之前，你需要把所有 XCode 自动为我们生成的模版代码都清除掉。&lt;/p&gt;
+
+&lt;p&gt;将 &lt;strong&gt;GameViewController.swift&lt;/strong&gt; 文件里的内容替换为以下的：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;import UIKit
+import SceneKit
+ 
+class GameViewController: UIViewController {
+
+    override func viewDidLoad() {
+    super.viewDidLoad()
+  }
+ 
+  override func shouldAutorotate() -&amp;gt; Bool {
+    return true
+  }
+ 
+  override func prefersStatusBarHidden() -&amp;gt; Bool {
+    return true
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;旧的代码是用来生成刚刚那个宇宙飞船的；你刚刚做的就是用一个空白的模版替换了它。&lt;code&gt;shouldAutorotate()&lt;/code&gt; 这个方法控制设备的转屏操作，&lt;code&gt;prefersStatusBarHidden()&lt;/code&gt; 则用来隐藏顶部的状态栏。&lt;/p&gt;
+
+&lt;h2&gt;设置 SceneKit&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;SCNScene&lt;/code&gt; 这个类代表了一个场景；你需要将场景放入一个 &lt;code&gt;SCNView&lt;/code&gt; 的对象里，这样场景才会展示在屏幕上。所以你接下来的任务就是在项目中创建一个场景以及和它相关的视图。&lt;/p&gt;
+
+&lt;h3&gt;配置视图&lt;/h3&gt;
+
+&lt;p&gt;将下面这个属性添加到 &lt;code&gt;GameViewController.swift&lt;/code&gt; 中，，就放在 &lt;code&gt;viewDidLoad()&lt;/code&gt; 的上面：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;var scn视图: SCNView!
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这里，你声明了一个类型为 &lt;code&gt;SCNView&lt;/code&gt; 的属性用来渲染 &lt;code&gt;SCNScene&lt;/code&gt; 的内容以供显示。&lt;/p&gt;
+
+&lt;p&gt;下一步，在 &lt;code&gt;prefersStatusBarHidden()&lt;/code&gt; 这个方法的下面新添加这样一个方法：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;func 配置视图() {
+    scn视图 = self.view as! SCNView
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这里，你把 &lt;code&gt;self.view&lt;/code&gt; 转换成了 &lt;code&gt;SCNView&lt;/code&gt; 类型并把它存储在了 scn&lt;code&gt;视图&lt;/code&gt;这个属性里，这样在你之后需要再引用它时，就不需要一遍又一遍地进行这种转换了。注意 &lt;code&gt;self.view&lt;/code&gt; 这个视图在 &lt;code&gt;Main.storyboard&lt;/code&gt; 这个文件中已经被配置成了 &lt;code&gt;SCNView&lt;/code&gt;（所以上述的转换不会出现问题）。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注：&lt;code&gt;SCNView&lt;/code&gt; 在 OS X 系统中是 &lt;code&gt;NSView&lt;/code&gt; 的子类，在 iOS 中是 &lt;code&gt;UIView&lt;/code&gt; 的子类。所以无论你是在给 OS X 还是 iOS 编程，同一个 &lt;code&gt;SCNView&lt;/code&gt; 都会提供给 SCeneKit 所需要的专用视图。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3&gt;配置场景&lt;/h3&gt;
+
+&lt;p&gt;现在是时候来配置游戏场景了。还是 &lt;code&gt;GameViewController.swift&lt;/code&gt; 这个文件中，在 &lt;code&gt;scn视图&lt;/code&gt;属性的下面，再添加这样一个属性：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;var scn场景 = SCNScene!
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这里你在游戏里声明了一个类型为 &lt;code&gt;SCNScene&lt;/code&gt; 的属性。以后你还会在其中添加各种组件，比如灯光、摄像头、几何以及粒子发射器等等。&lt;/p&gt;
+
+&lt;p&gt;现在接着&lt;code&gt;配置视图()&lt;/code&gt;这个方法的后面添加下面的代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;func 配置场景() {
+  scn场景 = SCNScene()
+  scn视图.scene = scn场景
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;这些代码创建了一个空白的 &lt;code&gt;SCNScene&lt;/code&gt; 对象并将其存储在了 &lt;code&gt;scn场景&lt;/code&gt; 里；然后把这个空白的场景设置给了 &lt;code&gt;scn视图&lt;/code&gt; 以备其使用。&lt;/p&gt;
+
+&lt;h3&gt;最后一步&lt;/h3&gt;
+
+&lt;p&gt;你已经完成了配置场景和视图的两个方法，现在需要在程序初始化的过程中找个合适的时机调用它们。在视图刚刚完成加载的时候调用会是一个不错的时机。&lt;/p&gt;
+
+&lt;p&gt;把下面这两行代码加入到 &lt;code&gt;viewDidLoad()&lt;/code&gt; 中，就放在 &lt;code&gt;super.viewDidLoad()&lt;/code&gt; 这一行的下面：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;配置视图()
+配置视图()
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;在最后一步里，我们要给游戏添加一个图标。下载本教程的&lt;a href=&quot;https://github.com/FangYiXiong/GeometryFighterResources/archive/1.0.zip&quot;&gt;资源文件&lt;/a&gt;然后解压缩；你会发现里面有不同尺寸的图标文件供你使用。&lt;/p&gt;
+
+&lt;p&gt;要设置游戏的图标，我们需要打开 &lt;strong&gt;Assets.xcassets&lt;/strong&gt; 文件夹，选择 &lt;strong&gt;AppIcon&lt;/strong&gt; 这一条，然后把 Resources 文件夹中的每一个文件拖拽到相应的位置上。完成后应该跟下图是一样的：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-14616582127437.png&quot; alt=&quot;&quot;&gt;￼&lt;/p&gt;
+
+&lt;p&gt;运行你的程序，然后在一片漆黑的机遇之门面前颤抖吧！:]&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-14616584725170.png&quot; alt=&quot;&quot;&gt;￼&lt;/p&gt;
+
+&lt;p&gt;说句公道话，这个第一眼看上去可能没那么酷，但是你在这一路上已经完成了：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;使用 SceneKit 的游戏模版创建了一个基本的 SceneKit 的游戏工程项目；&lt;/li&gt;
+&lt;li&gt;学习如何删除掉不必要的文件夹，比如 &lt;strong&gt;art.scnassets&lt;/strong&gt;，来清理出一个全新的工程来；&lt;/li&gt;
+&lt;li&gt;最后，你还学会了如何使用一个空白的场景 &lt;code&gt;SCNScene&lt;/code&gt; 来初始化视图 &lt;code&gt;SCNView&lt;/code&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;恭喜你 —— 你现在已经清理好了一个干净的程序来继续学习了！&lt;/p&gt;
+
+&lt;h2&gt;接下来怎么办？&lt;/h2&gt;
+
+&lt;p&gt;这里是&lt;a href=&quot;https://github.com/FangYiXiong/GeometryFighter/archive/part-1-finished.zip&quot;&gt;完成本节后的代码&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;就目前而言，您应该继续阅读本系列教程的&lt;a href=&quot;http://iOSinit.com/scenekit-02&quot;&gt;第二节&lt;/a&gt;，在第二节中，我们开始编写游戏的主体部分，并学习有关 SceneKit 节点有关的知识。&lt;/p&gt;
+
+&lt;p&gt;本节视频教程地址（链接待更新）&lt;/p&gt;
+
+&lt;p&gt;免费直播教程：&lt;a href=&quot;http://www.swiftv.cn/course/inen5bqr&quot;&gt;地址&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;译者注：如果您刚开始学习 iOS 开发，希望系统地学习并得到及时的指导，可以考虑来购买我的视频教程：&lt;a href=&quot;http://iosinit.com/ios-3d-games/&quot;&gt;「从零开始」学习 3D iOS游戏编程&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;这一教程基于本文提及的&lt;a href=&quot;https://www.raywenderlich.com/store/3d-ios-games-by-tutorials&quot;&gt;《3D iOS 游戏教程》&lt;/a&gt;这本书，将会教给你制作 3D iOS 游戏中所需要知道的一切知识，在这个过程中你将从头开始制作一系列类似于&lt;a href=&quot;(https://itunes.apple.com/cn/app/fruit-ninja/id362949845?mt=8)&quot;&gt;水果忍者&lt;/a&gt;、经典的敲砖块，甚至苹果 WWDC 上和 Apple TV 一起首发的游戏 —— &lt;a href=&quot;https://itunes.apple.com/us/app/crossy-road-endless-arcade/id924373886?mt=8&quot;&gt;Crossy Road&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;于此同时，如果您有任何问题，欢迎在微博上 &lt;a href=&quot;http://weibo.com/fangyixiong&quot;&gt;@方一雄&lt;/a&gt; 给我留言或私信。&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Fri, 29 Apr 2016 03:42:35 +0800</pubDate>
+        <link>http://vno.onevcat.com/2016/04/scenekit-01/</link>
+        <guid isPermaLink="true">http://vno.onevcat.com/2016/04/scenekit-01/</guid>
+        
+        <category>3d-game</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>「从零开始」学习 3D iOS 游戏编程</title>
+        <description>&lt;h2&gt;课程简介&lt;/h2&gt;
+
+&lt;p&gt;学习如何使用 Swift 配合苹果最新的3D游戏框架 - SceneKit 来制作 3D 的 iOS 游戏。&lt;/p&gt;
+
+&lt;p&gt;通过一系列的迷你小游戏和挑战，你将从一个完全的新手进化成一个掌握各种技能的游戏制作老手，这些技能足够你来制作属于你自己的 3D 游戏！&lt;/p&gt;
+
+&lt;p&gt;完全更新到最新的 &lt;strong&gt;iOS 9&lt;/strong&gt;, &lt;strong&gt;Swift 2&lt;/strong&gt; 和 &lt;strong&gt;Xcode 7&lt;/strong&gt;，并包含 &lt;strong&gt;4&lt;/strong&gt; 个完整的迷你小游戏（包括曾经流行的&lt;strong&gt;水果忍者&lt;/strong&gt;那样的游戏）！&lt;/p&gt;
+
+&lt;p&gt;本课程使用 Raywenderlich 的教材 &lt;a href=&quot;https://www.raywenderlich.com/store/3d-ios-games-by-tutorials&quot;&gt;3D iOS Games by Tutorials&lt;/a&gt;，相关图片声音资源为原作者所有，课程费用中已包含正版书籍费用。&lt;/p&gt;
+
+&lt;h2&gt;适合什么人群？&lt;/h2&gt;
+
+&lt;p&gt;本课程同时适用于初级和进阶的 iOS 开发者。无论你是一个在 iOS 游戏开发方面完全的新手，还是一个有一定开发经验但是希望学习 Scene Kit（苹果最新的游戏开发框架），你都将从这一课程中受益。&lt;/p&gt;
+
+&lt;h2&gt;我能学到什么？&lt;/h2&gt;
+
+&lt;p&gt;iOS 3D游戏编程：从入门到精通一共包含 20 个章节，整个教程按照初级内容到高级内容被分成了四个部分。在每一个部分，你都将从头开始编写一个完整的小游戏。&lt;/p&gt;
+
+&lt;p&gt;下面让我们看看具体的内容。&lt;/p&gt;
+
+&lt;h3&gt;第一部分：SceneKit 基础&lt;/h3&gt;
+
+&lt;p&gt;这一部分覆盖了使用 SceneKit 来创建 3D 游戏的基础知识。你将会学习到几乎每一个使用 SceneKit 创建的 3D 游戏都会用到的最重要的技术。到本部分结束时，你将有足够的知识来创建你自己的 3D 小游戏：几何忍者！&lt;/p&gt;
+
+&lt;p&gt;这是一个类似于“水果忍者”那样类型的游戏，各种各样的几何图形不断地飞到屏幕上来满足你的破坏欲。找寻你内心的天行者（达斯·维达），并使用死亡一指来消灭这些彩色的几何体吧！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/content/images/2016/04/00_ScreenShot.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;第 1 章：场景（Scenes）创建你第一个 SceneKit 的游戏工程，了解一些基本知识。&lt;/li&gt;
+&lt;li&gt;第 2 章：节点（Nodes）学习如何使用节点、基本的几何体以及摄像头来从头构建一个 3D 的场景。&lt;/li&gt;
+&lt;li&gt;第 3 章：物体引擎（Physics）使用内置的物理引擎，来为游戏中的元素增加基本的物理规律。&lt;/li&gt;
+&lt;li&gt;第 4 章：渲染循环（Render Loop）学习 SceneKit 中有关渲染循环的知识，以及如何利用它来更新游戏中的元素。&lt;/li&gt;
+&lt;li&gt;第 5 章：粒子系统（Particle System） 学习如何创建并使用 3D 粒子系统，来给游戏增添大量的爆炸效果。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;第二部分：SceneKit 编辑器&lt;/h3&gt;
+
+&lt;p&gt;Xcode 内置了一系列的标准化的工具供我们使用。在这一部分中，你将会学习它们的高阶用法。这些工具将使你在利用 SceneKit 创建 3D 游戏时更容易、更快捷以及，更有趣。&lt;/p&gt;
+
+&lt;p&gt;你将在这一部分完成一个名为“消砖块”的游戏，你可能以前玩过类似的游戏，但这一次我们给它添加了 3D 的效果和新感觉。盯紧小球！握紧隔板！让我们打碎更多的砖块吧！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/content/images/2016/04/06_ScreenShot.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;第 6 章：场景编辑器 介绍如何使用 XCode 提供给我们的强大的场景编辑器。&lt;/li&gt;
+&lt;li&gt;第 7 章：摄像机 学习 SceneKit 提供给我们的不同的摄像机类型。&lt;/li&gt;
+&lt;li&gt;第 8 章：灯光  学习 SceneKit 中关于灯光的一切，以及如何合适地给你的游戏添加灯光。&lt;/li&gt;
+&lt;li&gt;第 9 章：原型  现在让我们撸起袖子开始写代码吧！这一章我们只用基本的原型来搭建出一个基本的游戏场景。&lt;/li&gt;
+&lt;li&gt;第 10 章：初级的碰撞检测 将物理引擎加入到游戏里并学习如何处理基本的碰撞检测。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;第三部分：SceneKit 进阶&lt;/h3&gt;
+
+&lt;p&gt;在这一部分，你将创建一个几乎真实的世界，在这个世界你需要控制一个古老的遗迹法球穿越在天空中的迷宫。这个游戏叫做“上古迷城”。这个游戏是一个修改过的迷宫游戏。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/content/images/2016/04/11_Screenshot-768x467.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;第 11 章：材质  学习 SceneKit 中不同的材质模型。&lt;/li&gt;
+&lt;li&gt;第 12 章：节点的引用  学习如何在游戏中使用节点的引用。&lt;/li&gt;
+&lt;li&gt;第 13 章：阴影  学习如何使用及配置光的暗部，即所谓的阴影。&lt;/li&gt;
+&lt;li&gt;第 14 章：进阶的碰撞检测  学习什么是掩码以及如何使用掩码来进行更复杂的碰撞检测。&lt;/li&gt;
+&lt;li&gt;第 15 章：运动感应  学习如何在游戏中增加运动感应，以及如何使用运动传感器的数据来移动游戏中的元素。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;第四部分：SceneKit 高级&lt;/h3&gt;
+
+&lt;p&gt;“你心中的 SceneKit 力量十分强大，年轻人”&lt;/p&gt;
+
+&lt;p&gt;在这一部分，你不会学到很多新的知识，但是会把以前学过的所有知识综合地运用起来，来创建一个立体像素风格的游戏。到本章的最后，你将会完成一个自己的游戏：猪先生。&lt;/p&gt;
+
+&lt;p&gt;这是一个类似于 Crossy Road 风格的游戏，有着清新的像素风格的图像，好听的音乐和炫酷的音效。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/content/images/2016/04/16_Screenshot-700x301--1-.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;游戏的故事是这样的：猪先生烧好了一壶下午茶，在等待的功夫，准备去附近公园寻找丢失的金币。不幸的是，一群坏的大灰狼决定在附近建造一个大商场，导致了去公园的路变得灰常的拥堵。&lt;/p&gt;
+
+&lt;p&gt;猪先生走路的时候必须很小心，否则就会在路上被拍成培根。我们的英雄可以随身携带一些金币，但是只有把金币搬回家中才能得分。&lt;/p&gt;
+
+&lt;p&gt;别担心 ———— 我会从头一步一步地教你来创造整个游戏！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;第 16 章：转场  创建多个游戏场景，并学习如何在其中进行切换。&lt;/li&gt;
+&lt;li&gt;第 17 章：高级的节点的引用  使用节点的引用来建造更复杂的场景。&lt;/li&gt;
+&lt;li&gt;第 18 章：动作  学习如何使用 XCode 内置的动作编辑器来给游戏添加基本的动画。&lt;/li&gt;
+&lt;li&gt;第 19 章：高级的碰撞检测  学习如何使用高级的碰撞检测技巧来解决可能碰到的状况。&lt;/li&gt;
+&lt;li&gt;第 20 章：音频  利用 SceneKit 内置的播放声音的能力来播放音乐，音效以及环境音。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;课程费用&lt;/h2&gt;
+
+&lt;p&gt;人民币 &lt;strong&gt;1800&lt;/strong&gt; 元（包含 350 元的原版教材费用。）&lt;/p&gt;
+
+&lt;h2&gt;如何购买&lt;/h2&gt;
+
+&lt;p&gt;目前视频课程还未上线，现在预购享受 &lt;strong&gt;半价优惠 900 元&lt;/strong&gt;，直接扫描下面二维码进行微信支付。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/content/images/2016/05/IMG_2367.JPG&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;付款后添加 QQ 362862602 告知付款人信息。课程上线后我会把兑换码发给你。&lt;/p&gt;
+</description>
+        <pubDate>Sun, 24 Apr 2016 13:51:12 +0800</pubDate>
+        <link>http://vno.onevcat.com/2016/04/ios-3d-games/</link>
+        <guid isPermaLink="true">http://vno.onevcat.com/2016/04/ios-3d-games/</guid>
+        
+        <category>course</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>「从零开始」做一个 FlappyBird 那样的游戏 第9节：主菜单</title>
+        <description>&lt;p&gt;原文地址：&lt;a href=&quot;http://iOSinit.com/flappybird-09&quot;&gt;第9节：主菜单&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;相关视频地址：&lt;a href=&quot;http://study.163.com/course/introduction/1685005.htm&quot;&gt;网易云课堂&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;嗨，大家好，我是方一雄。欢迎大家继续收看&lt;a href=&quot;http://study.163.com/course/introduction/1685005.htm&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏&lt;/a&gt; 这一系列教学视频。&lt;/p&gt;
+
+&lt;p&gt;在本节的视频中，你将会学习如何计算玩家的得分。&lt;/p&gt;
+
+&lt;h2&gt;理论讲解（上）&lt;/h2&gt;
+
+&lt;h3&gt;「教程」界面&lt;/h3&gt;
+
+&lt;p&gt;好，我们首先要给游戏增加一个「教程」界面。为什么要增加这样一个界面呢？&lt;/p&gt;
+
+&lt;p&gt;因为我们需要给第一次进入游戏的玩家一点”提示”来告诉他们怎么玩这个游戏。像我们这个图上显示的一样，有一个”Tap”（触碰）来告诉玩家我们这个游戏是靠点击屏幕的方式进行游戏的。&lt;/p&gt;
+
+&lt;p&gt;另外，这样做的目的还在于每一次玩家重新开始游戏的时候，有一个心理上的准备时间。而不是像我们现在的游戏这样，每次结束后一点击屏幕，马上就重新开始游戏。&lt;/p&gt;
+
+&lt;p&gt;在这个教程界面中，我们给玩家一些准备的时间。这样同时也解决了第 6 节课后我们遇到的那个，重新开始游戏后必须猛按屏幕才能防止直接摔向地面的那个 Bug。&lt;/p&gt;
+
+&lt;h3&gt;如何添加「教程」界面&lt;/h3&gt;
+
+&lt;p&gt;好，那我们来看一下如何添加这个「教程」界面。&lt;/p&gt;
+
+&lt;p&gt;第一步，新建一个「切换到教程状态」的方法来控制流程。所谓流程，就是我们希望什么时候出现这个界面啊？比如有的游戏可能选择只在玩家第一次打开这个游戏的时候才显示「教程」。那因为我们这里的教程还有一个给玩家准备时间的作用，所以我们在每次进入游戏的时候都显示这个「教程」。&lt;/p&gt;
+
+&lt;p&gt;第二步，在「设置教程状态」这个方法中搭建界面，也就是图中，这个教程的示意图面放在哪里，Ready 那个标志放在哪里啊，这些。&lt;/p&gt;
+
+&lt;p&gt;然后，最后一步，修改其他相关的代码来保证我们的逻辑是正确的。&lt;/p&gt;
+
+&lt;p&gt;就这样三步，好，我们来看一下代码怎么写。&lt;/p&gt;
+
+&lt;h2&gt;Demo 演示&lt;/h2&gt;
+
+&lt;p&gt;详见视频&lt;/p&gt;
+
+&lt;h2&gt;理论讲解（下）&lt;/h2&gt;
+
+&lt;h3&gt;「主菜单」&lt;/h3&gt;
+
+&lt;p&gt;好，添加完「教程」界面之后，我们还剩下一个问题，就是添加「主菜单」。&lt;/p&gt;
+
+&lt;p&gt;那经过了刚刚「教程」界面的添加之后，大家应该已经了解添加一个界面的大概流程。&lt;/p&gt;
+
+&lt;p&gt;所以，我们这里同样是 3 个步骤。&lt;/p&gt;
+
+&lt;p&gt;首先，我们新建一个「切换到主菜单」的方法，在这个方法里我们「设置背景」啊，「设置主角」啊，等等，当然，这里还要有一个新方法，就是「设置主菜单」。&lt;/p&gt;
+
+&lt;p&gt;第二步，就是来实现「设置主菜单」这个方法，这里搭建界面，还有可能有一些动画特效，比如这里，我们希望给最下面那个「学习如何制作这个游戏」的按钮一个不断放大缩小的动画来更让它更醒目一些。&lt;/p&gt;
+
+&lt;p&gt;然后，最后一步，修改其他相关的代码来保证我们的逻辑是正确的。&lt;/p&gt;
+
+&lt;p&gt;这里的最后一步修改逻辑就要比刚才的「教程」复杂一些了，专门再说一下。&lt;/p&gt;
+
+&lt;p&gt;在修改逻辑这里，首先我们要修改「didMoveToView」这个方法，这个方法是在游戏刚开始的时候调用的，之前我们在这里写的是「切换到教程状态」，那这里我们就要修改成「切换到主菜单」了。&lt;/p&gt;
+
+&lt;p&gt;然后我们要修改「切换到教程状态」这个方法，为什么呢？因为我们现在需要在这里把主菜单的一些图片和动画去除掉，而且有一些重复的代码，比如「设置背景」什么的，也要去除掉，来保证程序的正确。&lt;/p&gt;
+
+&lt;p&gt;最后，我们要修改触摸的方法，touchesBegan。因为我们的主菜单上有不同的按钮，我们要判断一下用户点击是哪个”按钮”。我们这里的判断不需要太精细，比如，只要用户点击的是屏幕下方15%以内的位置，我们就认为它是点击了「学习制作这个游戏」这个按钮，然后如果用户点击了左边屏幕，我们就开始游戏，点击了右边，就跳到 AppStore去评论。&lt;/p&gt;
+
+&lt;h2&gt;挑战时间&lt;/h2&gt;
+
+&lt;p&gt;好，又到了我们喜闻乐见的「挑战时间」了。本期挑战的题目是：&lt;/p&gt;
+
+&lt;p&gt;起飞~~~~~&lt;/p&gt;
+
+&lt;p&gt;诶？谁把你放出来的？等会我先把她干掉啊！&lt;/p&gt;
+
+&lt;p&gt;好了，我们回到正常的世界里啊。这次挑战的原因呢，是这样的：&lt;/p&gt;
+
+&lt;p&gt;本来刚刚我录完视频正准备发布的时候，结果我们的主角跑过来跟我提了几个小小的意见。&lt;/p&gt;
+
+&lt;p&gt;我tmd翅膀是摆设嘛，飞的时候为啥一直不动呢，不动飞个P啊？为什么主菜单上的一个按钮都有动画，我堂堂一个男主角却没有动画特效？（明明加过很多了的说……）别以为我不会告诉别人，你这样做不就是为了在教程网页增加以后课程的广告嘛？（你这不是已经说了嘛...=。=）等等，有话好好说。你到底想要啥子嘛？&lt;/p&gt;
+
+&lt;p&gt;经过一番交涉之后，我把伟大的战无不胜的主角的愿望转达一下：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;像视频中这样，在教程状态下，要以每0.4秒50个像素的速度上下移动。&lt;/li&gt;
+&lt;li&gt;飞的时候肯定要煽动翅膀啊，所以要再加上不停煽动翅膀的动画。&lt;/li&gt;
+&lt;li&gt;总之，就是要「起飞」！&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;好，更多详情请参考屏幕下方给出的网址。&lt;/p&gt;
+
+&lt;p&gt;本期视频就到这里，希望您看的愉快。我们下期再见！&lt;/p&gt;
+</description>
+        <pubDate>Wed, 13 Apr 2016 14:54:08 +0800</pubDate>
+        <link>http://vno.onevcat.com/2016/04/flappybird-09/</link>
+        <guid isPermaLink="true">http://vno.onevcat.com/2016/04/flappybird-09/</guid>
+        
+        <category>flappybird</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>「从零开始」做一个 FlappyBird 那样的游戏 第9节 课后挑战：起飞！</title>
+        <description>&lt;p&gt;原文地址：&lt;a href=&quot;http://iosinit.com/flappybird-09-ex/&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏 第9节 - 课后挑战：起飞！&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;挑战内容&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;在教程状态下，让主角不停地上下移动，速度为每 0.4 秒移动 50 个像素。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;给主角增加扇动翅膀的动画。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;/content/images/2016/04/flappybird-09-finished-demo-1.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;提示&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;第 1 项挑战和第 4 节课后的挑战很相似，可以参考当时的&lt;a href=&quot;http://iosinit.com/flappybird-04-ex/&quot;&gt;文档&lt;/a&gt;。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在「教程」状态下添加完动画之后，记得要在游戏状态时把动画移除，不然会发生奇怪的事情，你可以试试。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;扇动翅膀的原理就是在我们的图片资源中有 4 张主角的图片（bird0,bird1,bird2,bird3），每张翅膀的角度稍有不同，我们不断地更换这些图片就可以做到扇动翅膀的动画的效果了。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/content/images/2016/04/4sprites.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;在这里，我们需要用到 &lt;code&gt;SKAction.animateWithTextures([SKTexture], timePerFrame: )&lt;/code&gt; 这个方法，第二个参数决定了扇动翅膀的快慢，给一个你觉得合适的时间就可以了。第一个参数要求一个 &lt;code&gt;SKTexture&lt;/code&gt; 类型的数组，如果你不清楚如何做，尝试下面的代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;var 角色贴图组: Array&amp;lt;SKTexture&amp;gt; = []
+
+for i in 0..&amp;lt;k角色动画总帧数 {
+    角色贴图组.append(SKTexture(imageNamed: &amp;quot;Bird\(i)&amp;quot;))
+}
+
+for i in (k角色动画总帧数-1).stride(through: 0, by: -1) {
+    角色贴图组.append(SKTexture(imageNamed: &amp;quot;Bird\(i)&amp;quot;))
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;其中，&lt;code&gt;k角色动画总帧数&lt;/code&gt; 是需要新定义的一个常量，在我们这个例子中就是&lt;code&gt;4&lt;/code&gt;。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;扇动翅膀的动画不需要停止，我们甚至可以让它从「主菜单」的时候就开始运行。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;参考解答&lt;/h2&gt;
+
+&lt;p&gt;参见 &lt;a href=&quot;https://github.com/FangYiXiong/FlappyZoe/archive/part-9-challenge-finished.zip&quot;&gt;第 9 节课完成挑战后的代码&lt;/a&gt;。&lt;/p&gt;
+</description>
+        <pubDate>Tue, 12 Apr 2016 10:14:00 +0800</pubDate>
+        <link>http://vno.onevcat.com/2016/04/flappybird-09-ex/</link>
+        <guid isPermaLink="true">http://vno.onevcat.com/2016/04/flappybird-09-ex/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>iOS 视频教程 汇总</title>
+        <description>&lt;h2&gt;「从零开始」系列&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/ios-3d-games/&quot;&gt;「从零开始」学习 3D iOS 游戏编程&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/scenekit-01/&quot;&gt;「从零开始」做一个水果忍者那样的游戏 - SceneKit 基础教程&lt;/a&gt;（每周二晚直播，&lt;a href=&quot;http://www.swiftv.cn/course/inen5bqr&quot;&gt;直播地址&lt;/a&gt;）&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://study.163.com/course/courseMain.htm?courseId=1685005&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;「iOS提高班」系列&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://study.163.com/course/courseMain.htm?courseId=1683009&quot;&gt;「iOS提高班」如何做一个带动画的下拉刷新&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Tue, 12 Apr 2016 09:04:00 +0800</pubDate>
+        <link>http://vno.onevcat.com/2016/04/course/</link>
+        <guid isPermaLink="true">http://vno.onevcat.com/2016/04/course/</guid>
+        
+        <category>course</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>「从零开始」做一个 FlappyBird 那样的游戏</title>
+        <description>&lt;h2&gt;简介&lt;/h2&gt;
+
+&lt;p&gt;嗨，大家好，我是方一雄。欢迎大家来收看从零开始做一个 FlappyBird 那样的游戏这一系列教学视频。&lt;/p&gt;
+
+&lt;p&gt;在这个系列的视频中，我将从零开始手把手地教你做一个类似之前非常流行的 Flappy Bird 那样的游戏。（&lt;a href=&quot;https://itunes.apple.com/cn/app/flappy-zoe/id1077251372?mt=8&quot;&gt;AppStore 链接&lt;/a&gt;）&lt;/p&gt;
+
+&lt;p&gt;你将从学习如何制作游戏的物理引擎，到怎样处理游戏中角色的碰撞，从记录玩家当前的分数和最高分，到如何给游戏增加炫酷的特效，以及最终提交到苹果的 App Store 所有这个过程中你需要知道的一切。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/content/images/2016/05/-----2016-05-03---4-23-39.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;内容部分译自 Raywenderlich 的 &lt;a href=&quot;https://www.raywenderlich.com/video-tutorials#swiftflappy&quot;&gt;Video Tutorial&lt;/a&gt;。（如果您的英文和经济条件允许，请直接订阅该项目，费用为 19 美金/月，英文世界最棒的 iOS 教程网站，没有之一。）&lt;/p&gt;
+
+&lt;h2&gt;视频地址&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://study.163.com/course/courseMain.htm?courseId=1685005&quot;&gt;网易云课堂&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.swiftv.cn/course/il0dj77w&quot;&gt;SwiftV&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;图文教程导航&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;「从零开始」做一个 FlappyBird 那样的游戏 1：背景（待更新）&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-02/&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏 2：主角的运动&lt;/a&gt;&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-03/&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏 3：前景的移动&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-04/&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏 4：障碍物&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-04-ex/&quot;&gt;课后挑战：戴上帽子！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-05/&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏 5：碰撞体积&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-06/&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏 6：检测物体的碰撞&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-06-ex/&quot;&gt;课后挑战：重新开始游戏&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;「从零开始」做一个 FlappyBird 那样的游戏 7：计算得分（待更新）&lt;/li&gt;
+&lt;li&gt;「从零开始」做一个 FlappyBird 那样的游戏 8：记分板（待更新）&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-09/&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏 9：主菜单&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-09-ex/&quot;&gt;课后挑战：起飞！&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;更多教程&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/ios-3d-games/&quot;&gt;「从零开始」学习 3D iOS 游戏编程&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/scenekit-01/&quot;&gt;「从零开始」做一个水果忍者那样的游戏 - Scene Kit 基础教程&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://study.163.com/course/courseMain.htm?courseId=1683009&quot;&gt;「iOS提高班」如何做一个带动画的下拉刷新&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 06 Apr 2016 08:58:52 +0800</pubDate>
+        <link>http://vno.onevcat.com/2016/04/flappy-bird/</link>
+        <guid isPermaLink="true">http://vno.onevcat.com/2016/04/flappy-bird/</guid>
+        
+        <category>flappybird</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>
