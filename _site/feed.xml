@@ -5,9 +5,24 @@
     <description>嗨，我是方一雄，这是我的 iOS 视频教程小站，欢迎您的光临。</description>
     <link>http://vno.onevcat.com/</link>
     <atom:link href="http://vno.onevcat.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 01 Sep 2016 00:36:44 +0800</pubDate>
-    <lastBuildDate>Thu, 01 Sep 2016 00:36:44 +0800</lastBuildDate>
+    <pubDate>Sun, 04 Sep 2016 22:16:58 +0800</pubDate>
+    <lastBuildDate>Sun, 04 Sep 2016 22:16:58 +0800</lastBuildDate>
     <generator>Jekyll v3.1.1</generator>
+    
+      <item>
+        <title>网站转换到 Jekyll</title>
+        <description>&lt;p&gt;真是不容易啊，终于把网站迁移到 Jekyll 系统中，后端小白的我遇到了各种问题，准备把这个过程视频记录一下。&lt;/p&gt;
+
+&lt;p&gt;视频（待更新）&lt;/p&gt;
+
+&lt;p&gt;参考资料（待更新）&lt;/p&gt;
+</description>
+        <pubDate>Sun, 04 Sep 2016 22:15:44 +0800</pubDate>
+        <link>http://vno.onevcat.com/2016/09/migrate-to-jekyll/</link>
+        <guid isPermaLink="true">http://vno.onevcat.com/2016/09/migrate-to-jekyll/</guid>
+        
+        
+      </item>
     
       <item>
         <title>「从零开始」做一个水果忍者那样的游戏（Scene Kit 基础教程）第 5 节：粒子系统</title>
@@ -1780,61 +1795,6 @@ for i in (k角色动画总帧数-1).stride(through: 0, by: -1) {
         <guid isPermaLink="true">http://vno.onevcat.com/2016/04/course/</guid>
         
         <category>course</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>「从零开始」做一个 FlappyBird 那样的游戏</title>
-        <description>&lt;h2&gt;简介&lt;/h2&gt;
-
-&lt;p&gt;嗨，大家好，我是方一雄。欢迎大家来收看从零开始做一个 FlappyBird 那样的游戏这一系列教学视频。&lt;/p&gt;
-
-&lt;p&gt;在这个系列的视频中，我将从零开始手把手地教你做一个类似之前非常流行的 Flappy Bird 那样的游戏。（&lt;a href=&quot;https://itunes.apple.com/cn/app/flappy-zoe/id1077251372?mt=8&quot;&gt;AppStore 链接&lt;/a&gt;）&lt;/p&gt;
-
-&lt;p&gt;你将从学习如何制作游戏的物理引擎，到怎样处理游戏中角色的碰撞，从记录玩家当前的分数和最高分，到如何给游戏增加炫酷的特效，以及最终提交到苹果的 App Store 所有这个过程中你需要知道的一切。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/content/images/2016/05/-----2016-05-03---4-23-39.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;内容部分译自 Raywenderlich 的 &lt;a href=&quot;https://www.raywenderlich.com/video-tutorials#swiftflappy&quot;&gt;Video Tutorial&lt;/a&gt;。（如果您的英文和经济条件允许，请直接订阅该项目，费用为 19 美金/月，英文世界最棒的 iOS 教程网站，没有之一。）&lt;/p&gt;
-
-&lt;h2&gt;视频地址&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://study.163.com/course/courseMain.htm?courseId=1685005&quot;&gt;网易云课堂&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.swiftv.cn/course/il0dj77w&quot;&gt;SwiftV&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;图文教程导航&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;「从零开始」做一个 FlappyBird 那样的游戏 1：背景（待更新）&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-02/&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏 2：主角的运动&lt;/a&gt;&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-03/&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏 3：前景的移动&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-04/&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏 4：障碍物&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-04-ex/&quot;&gt;课后挑战：戴上帽子！&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-05/&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏 5：碰撞体积&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-06/&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏 6：检测物体的碰撞&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-06-ex/&quot;&gt;课后挑战：重新开始游戏&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;「从零开始」做一个 FlappyBird 那样的游戏 7：计算得分（待更新）&lt;/li&gt;
-&lt;li&gt;「从零开始」做一个 FlappyBird 那样的游戏 8：记分板（待更新）&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-09/&quot;&gt;「从零开始」做一个 FlappyBird 那样的游戏 9：主菜单&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/flappybird-09-ex/&quot;&gt;课后挑战：起飞！&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;更多教程&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/ios-3d-games/&quot;&gt;「从零开始」学习 3D iOS 游戏编程&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.iosinit.com/scenekit-01/&quot;&gt;「从零开始」做一个水果忍者那样的游戏 - Scene Kit 基础教程&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://study.163.com/course/courseMain.htm?courseId=1683009&quot;&gt;「iOS提高班」如何做一个带动画的下拉刷新&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Wed, 06 Apr 2016 08:58:52 +0800</pubDate>
-        <link>http://vno.onevcat.com/2016/04/flappy-bird/</link>
-        <guid isPermaLink="true">http://vno.onevcat.com/2016/04/flappy-bird/</guid>
-        
-        <category>flappybird</category>
         
         
       </item>
