@@ -5,13 +5,21 @@
     <description>嗨，我是方一雄，这是我的 iOS 视频教程小站，欢迎您的光临。</description>
     <link>http://vno.onevcat.com/</link>
     <atom:link href="http://vno.onevcat.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 04 Sep 2016 22:16:58 +0800</pubDate>
-    <lastBuildDate>Sun, 04 Sep 2016 22:16:58 +0800</lastBuildDate>
+    <pubDate>Mon, 05 Sep 2016 11:23:32 +0800</pubDate>
+    <lastBuildDate>Mon, 05 Sep 2016 11:23:32 +0800</lastBuildDate>
     <generator>Jekyll v3.1.1</generator>
     
       <item>
         <title>网站转换到 Jekyll</title>
         <description>&lt;p&gt;真是不容易啊，终于把网站迁移到 Jekyll 系统中，后端小白的我遇到了各种问题，准备把这个过程视频记录一下。&lt;/p&gt;
+
+&lt;p&gt;刚刚发现一个问题，Jekyll-hook 官方的说明中少装了一个bundler，导致无法Build。现在再试试。&lt;/p&gt;
+
+&lt;p&gt;然后又发现一个问题，少了N多个Gem没有装。&lt;/p&gt;
+
+&lt;p&gt;然后又发现一个问题，Jekyll装不上因为ruby版本小于2.0。&lt;/p&gt;
+
+&lt;p&gt;然后又发现一个问题，ruby没法升级版本因为rvm装不上...&lt;/p&gt;
 
 &lt;p&gt;视频（待更新）&lt;/p&gt;
 
