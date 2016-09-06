@@ -1,3 +1,3 @@
-bundler exec jekyll b
+bundler exec jekyll serve
 git add .
 git commit
