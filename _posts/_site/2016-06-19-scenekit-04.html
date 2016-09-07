@@ -1,0 +1,236 @@
+<p>原文：<a href="https://www.raywenderlich.com/128728/scene-kit-tutorial-swift-part-4-render-loop">Scene Kit Tutorial with Swift Part 4: Render Loop</a></p>
+
+<blockquote>
+  <p>注：这是<a href="https://www.raywenderlich.com/store/3d-ios-games-by-tutorials">《3D iOS 游戏教程》</a>这本书中一个章节的缩写版，来让您可以来领略一下这本书的内容。希望您喜欢！</p>
+</blockquote>
+
+<p><img src="http://7xqycx.com1.z0.glb.clouddn.com/2016-04-29-Thumb.gif" alt="" /></p>
+
+<p>这一教程将向你展示如何使用苹果最新的游戏框架－SceneKit，来创建你的第一个 3D 游戏。</p>
+
+<p>在这个一共 5 节的系列教程中，你将会创建你的第一个 SceneKit 游戏：<strong>几何忍者（GeometryFighter）</strong>！这是一个类似于<strong><a href="https://itunes.apple.com/cn/app/fruit-ninja/id362949845?mt=8">水果忍者</a></strong>那样的游戏，你来摧毁不断涌上屏幕的几何体来满足自己内心的破坏欲:]</p>
+
+<p>下面是本系列教程文章的导航及简介：</p>
+
+<ul>
+  <li>
+    <p><a href="http://iOSinit.com/scenekit-01">第 1 节</a>，你将会学习到如何新建一个空白的 SceneKit 工程做为一个好的开始。</p>
+  </li>
+  <li>
+    <p><a href="http://iOSinit.com/scenekit-02">第 2 节</a>，开始编写游戏，并学习有关 SceneKit 节点的知识。</p>
+  </li>
+  <li>
+    <p><a href="http://iOSinit.com/scenekit-03">第 3 节</a>，学习如何使用 SceneKit 内置的物理引擎来移动你的几何体。</p>
+  </li>
+  <li>
+    <p><a href="http://iOSinit.com/scenekit-04">第 4 节</a>，学习有关 SceneKit 中有关渲染循环的知识，并让你的几何体不断重生。</p>
+  </li>
+  <li>
+    <p>在最后的<a href="http://iOSinit.com/scenekit-05">第 5 节</a>中，你将学习如何将一些非常酷的粒子效果添加到游戏中，并最终完成这个游戏。</p>
+  </li>
+</ul>
+
+<p>本节是第四节，在本节的教程中，你将学习有关 SceneKit 中有关渲染循环的知识，并让你的几何体不断重生。</p>
+
+<blockquote>
+  <p>本篇教程从上一节教程结束的地方开始。如果你没有跟上，不要着急 ———— 你可以从这里下载本节教程的<a href="https://github.com/FangYiXiong/GeometryFighter/archive/part-3-finished.zip">开始程序包</a>。</p>
+</blockquote>
+
+<h2 id="section">开始</h2>
+
+<p>在上一节的教程中，我们给生成的几何体添加了物理引擎，然后给了一个冲击力把它扔到了空中。然后在模拟的重力作用下，物体最终还是慢慢落下然后消失不见。</p>
+
+<p>现在这个效果看起来还不错，但是如果我们能同时生成很多的几何体，让他们一起飞向空中，还能互相碰撞，那就<strong>更</strong>棒了。那样的话我们这个游戏的有趣程度绝对又会上升了一个档次！</p>
+
+<p>现在，我们的游戏只会调用<code class="highlighter-rouge">生成几何体()</code>这个方法一次。为了生成多个几何体，我们需要循环地多次调用<code class="highlighter-rouge">生成几何体()</code>这个方法。下面将隆重介绍……<strong>渲染循环（Render Loop）</strong>！</p>
+
+<p>在之前的章节中我们讲过，Scene Kit 使用 <strong>SCNView</strong> 来渲染你的内容。<strong>SCNView</strong> 中有一个 <strong>delegate（代理）</strong> 属性，这个属性设置的对象需要服从一个名为 <strong>SCNSceneRendererDelegate</strong> 的协议。设置好之后，<strong>SCNView</strong> 在之后每一帧的动画和渲染的过程中，当某一个事件发生时，就会调用 <strong>SCNSceneRendererDelegate</strong> 协议中相关的方法。</p>
+
+<p>用这种方式，你可以窥见 Scene Kit 渲染一个场景中的每一个步骤。这些渲染的步骤组成了<strong>渲染循环</strong>。</p>
+
+<p>所以 —— 到底都<strong>有</strong>哪些步骤？来看一下下面这张渲染循环的示意图：</p>
+
+<p><img src="http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-8.pic_hd.jpg" alt="" /></p>
+
+<p>这是<strong>幸运大转盘</strong>吗？:] 不，这只是关于渲染循环中 9 个步骤的一个简单的示意图。如果一个游戏的帧率是 60 FPS，猜猜看这些步骤将运行多少次？没错，你猜对了，一秒钟 60 次。</p>
+
+<p>我们可以把游戏的逻辑代码准确地加入到需要的地方，因为这些步骤总是按照下面的顺序运行：</p>
+
+<ol>
+  <li><strong>更新</strong>: 视图在代理上调用 <code class="highlighter-rouge">renderer(_: updateAtTime:)</code> 这个方法。这里是我们放入游戏场景更新的逻辑代码的好时机。</li>
+  <li><strong>执行动作和动画</strong>：Scene Kit 会执行场景中所有节点上关联的动作和动画效果。</li>
+  <li><strong>完成动画</strong>：视图会在代理上调用 <code class="highlighter-rouge">renderer(_: didApplyAnimationsAtTime:)</code> 这个方法。在这时，所有的节点都完成了这一帧需要完成的动画。</li>
+  <li><strong>物理模拟</strong>：Scene Kit 开始在场景中所有的节点上施加物理模拟的影响。</li>
+  <li><strong>完成物理模拟</strong>：视图会在代理上调用 <code class="highlighter-rouge">renderer(_: didSimulatePhysicsAtTime:)</code> 这个方法。在这时，所有的节点都完成了这一帧需要完成的物理模拟。</li>
+  <li><strong>计算约束</strong>：Scene Kit 将计算并实施约束。所谓约束，就是我们告诉 Scene Kit 的一些参数，用来决定如何变换节点来适配。</li>
+  <li><strong>开始渲染</strong>：视图会在代理上调用 <code class="highlighter-rouge">renderer(_: willRenderScene: atTime:)</code> 这个方法。在这时，视图马上要开始渲染场景了，所以任何需要放到最后的改变都应该放在这里。</li>
+  <li><strong>渲染</strong>：Scene Kit 渲染视图中的场景。</li>
+  <li><strong>完成渲染</strong>：循环的最后一步是调用 <code class="highlighter-rouge">renderer(_: didRenderScene: atTime:)</code>。这标志着一次渲染循环的结束；我们可以把任何需要在下一次循环开始前执行的代码放在这里。</li>
+</ol>
+
+<p>由于渲染循环是一个，嗯，<strong>循环</strong>。所以这是我们放置<code class="highlighter-rouge">生成几何体</code>的完美地点 —— 接下来的任务就是要决定应该放到哪个步骤里。</p>
+
+<h2 id="section-1">添加渲染代理</h2>
+
+<p>现在是时候把这个炫酷的功能添加到游戏中了。</p>
+
+<p>首先，我们需要让 <code class="highlighter-rouge">GameViewController</code> 这个类遵守 <code class="highlighter-rouge">SCNSceneRendererDelegate</code> 这个协议。把下面的代码添加到 <strong>GameViewController.swift</strong> 这个文件的底部：</p>
+
+<p>```
+// 1
+extension GameViewController: SCNSceneRendererDelegate {
+  // 2
+  func renderer(renderer: SCNSceneRenderer, updateAtTime 当前时间: NSTimeInterval) {
+    // 3
+    生成几何体()
+  }
+}</p>
+
+<p>```</p>
+
+<p>接下来让我们仔细看看上面的代码：</p>
+
+<ol>
+  <li>这里我们给 <code class="highlighter-rouge">GameViewController</code> 添加了一个扩展（extension），让它遵守一个协议，并把这部分代码单独组织在了一个代码块中。</li>
+  <li>这里添加了协议方法 <code class="highlighter-rouge">renderer(_: updateAtTime:)</code> 的一个实现。</li>
+  <li>最后，在这个代理方法中，我们调用<code class="highlighter-rouge">生成几何体()</code>来生成一个新的几何形状。</li>
+</ol>
+
+<p>这是我们侵入 Scene Kit 渲染循环的第一步。但是在视图调用这个代理方法之前，它首先要知道我们的 <code class="highlighter-rouge">GameViewController</code> 现在是视图的代理了。</p>
+
+<p>在<code class="highlighter-rouge">配置视图()</code>方法的最后添加这样一行代码：</p>
+
+<p><code class="highlighter-rouge">
+scn视图.delegate = self
+</code></p>
+
+<p>这行代码将 Scene Kit 的视图的 <code class="highlighter-rouge">delegate</code> 设置给了 <code class="highlighter-rouge">self</code>。现在当渲染循环开始后，视图就可以调用我们在 <code class="highlighter-rouge">GameViewController</code> 中写好的代理方法了。</p>
+
+<p>最后，我们做一点清理工作：把 <code class="highlighter-rouge">viewDidLoad()</code> 中的 <code class="highlighter-rouge">生成几何体()</code> 这行代码删除掉。因为我们已经在渲染循环中生成几何体了，所以这里就没必要再写它了。</p>
+
+<p>编译并运行；感受渲染循环不端生成的怒火吧！:]</p>
+
+<p><img src="http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14638106416213.png" alt="" /></p>
+
+<p>游戏开始后疯狂地生成几何体，最终导致所有的几何体都撞在了一起 —— 好棒！:]</p>
+
+<p>到底发生了什么？因为我们在渲染循环的每一更新时都调用了一次<code class="highlighter-rouge">生成几何体()</code>这个方法，所以每秒钟将生成 60 个几何体 —— 如果设备的性能足够强大以 60 FPS 来运行游戏的话。但是性能稍弱的设备（包括模拟器）都支持不了这个速度。</p>
+
+<p>游戏开始运行后，你会发现底部的帧率会突然下降很多。这是因为图形处理器不止要处理不断增加的几何体，同时还要计算物体间的碰撞模拟，这都会大幅地降低帧率。</p>
+
+<p>现在事情有点不受控制了，因为我们现在的游戏在很多设备上的表现都不会很好。</p>
+
+<h2 id="section-2">增加定时器</h2>
+
+<p>为了更好地提高用户体验，你需要使用好<strong>时间</strong>。哦，不，我不是说你要花更多的时间来写游戏的代码！:]我的意思是，你需要让时间在各个设备上都保持一致；这样无论设备本身的帧率如何，你的动画都将保持一个固定的频率。</p>
+
+<p>使用<strong>定时器</strong>是很多游戏中都会用到的一个常用技术。还记得在更新的代理方法中传入的参数 <strong>updateAtTime</strong>吗？这个参数代表了当前的系统时间。如果我们跟踪记录这个参数，我们就可以计算出游戏中流逝的时间，进而控制生成几何体的频率，比如每三秒钟生成一个，而不是现在这样越快越好。</p>
+
+<p>几何忍者中将使用一个简单的定时器来随机生成几何体，同时这个生成时间的间隔应该大到足够任何设备的处理器能正常运行。</p>
+
+<p>在 <code class="highlighter-rouge">GameViewController</code> 中增加一个新的属性，就放在<code class="highlighter-rouge">摄像头节点</code>的下面：</p>
+
+<p><code class="highlighter-rouge">
+var 重生时间: NSTimeInterval = 0
+</code></p>
+
+<p>我们将使用这个属性来决定下次生成几何体的时间。</p>
+
+<p>为了解决当前持续生成几何体的问题，把 <code class="highlighter-rouge">renderer(_: updateAtTime:)</code> 这个方法中的内容替换成下面的：</p>
+
+<p>```
+// 1
+if 当前时间 &gt; 重生时间 {
+  生成几何体()
+ 
+  // 2
+  重生时间 = 当前时间 + NSTimeInterval(Float.random(min: 0.2, max: 1.5))
+}</p>
+
+<p>```</p>
+
+<p>按照注释的顺序来解释：
+1. 首先检查<code class="highlighter-rouge">当前时间</code>是否大于<code class="highlighter-rouge">重生时间</code>。如果是，那么就生成一个新的几何体；否则，什么都不做。
+2. 生成几何体之后，更新<code class="highlighter-rouge">重生时间</code>为<strong>下一次</strong>生成新几何体的时间。而下一次重生的时间就是当前的时间再加上一段随机的时间。因为 <code class="highlighter-rouge">NSTimeInterval</code> 是以秒为单位的，我们下一次生成几何体的时间就是当前时间的 0.2 秒到 1.5 秒之间。</p>
+
+<p>编译并运行，来看看定时器的作用：</p>
+
+<p><img src="http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14638244732814.png" alt="" /></p>
+
+<p>相当梦幻，不是吗？</p>
+
+<p>事情开始变的可以控制了，同时几何体的生成还是随机的。但是你就不好奇当这些几何体都跌落并消失在视野之外以后将发生什么吗？</p>
+
+<h2 id="section-3">清理场景</h2>
+
+<p><code class="highlighter-rouge">生成几何体()</code> 持续地在场景中添加新的子节点 —— 但是从不删除旧的，即使是那么已经看不见的。Scene Kit 会尽可能保持游戏地平稳运行，但是那并不代表你可以忘记你的孩子们。你说你这算哪门子父母呀？！:]</p>
+
+<p>为了让游戏尽可能地高效运行并保持理想的帧率，我们需要把视野之外的节点移除。想想在什么地方做这个清理工作最合适呢？啊哈，对啦，就是渲染循环！很方便，是不是？</p>
+
+<p>当物体到达我们的边界时，我们就要把它移出场景。</p>
+
+<p>将下面这个方法添加到 <code class="highlighter-rouge">GameViewController</code> 这个类的底部，就放在<code class="highlighter-rouge">生成几何体()</code>的下面：</p>
+
+<p><code class="highlighter-rouge">
+func 清理场景() {
+  // 1
+  for 节点 in scn场景.rootNode.childNodes {
+    // 2
+    if 节点.presentationNode.position.y &lt; -2 {
+      // 3
+      节点.removeFromParentNode()
+    }
+  }
+}
+</code></p>
+
+<p>下面来解释一下上面的代码在干什么：</p>
+
+<ol>
+  <li>首先我们使用了一个简单的循环来遍历场景中所有的节点。</li>
+  <li>由于此时物理模拟还在进行中，我们不能简单地来使用物体的位置，因为这时它的位置是模拟动画<strong>之前</strong>的位置。Scene Kit 在动画过程中保留了一套物体的备份直到动画结束。这个概念第一次听的时候会让人感觉很奇怪，但是不久之后你就会理解了。为了得到动画中物体真正的位置，我们使用 <code class="highlighter-rouge">presentationNode</code> 这个属性。这个属性是只读的，不要尝试修改它！</li>
+  <li>这行代码就是把物体清除掉。对你的孩子这样做看起来很残忍，但是，你要知道，这正是所谓严厉的爱啊。</li>
+</ol>
+
+<p>为了使用上面这个方法，在 <code class="highlighter-rouge">renderer(_: updatedAtTime:)</code> 那个方法中，<code class="highlighter-rouge">if</code> 之后，增加这样一行代码：</p>
+
+<p><code class="highlighter-rouge">
+清理场景()
+</code></p>
+
+<p>还有一件事情：默认设置中，当没有动画需要执行时 Scene Kit 会进入一个“暂停”的状态。为了阻止它的放生，我们需要打开视图的 <code class="highlighter-rouge">playing</code> 这个属性。</p>
+
+<p>在<code class="highlighter-rouge">配置视图()</code>这个方法的底部添加一行代码：</p>
+
+<p><code class="highlighter-rouge">
+scn视图.playing = true
+</code></p>
+
+<p>这行代码让 Scene Kit 的视图一致保持运行状态。</p>
+
+<p>编译并运行；当屏幕中的物体开始下落时，拉远你的摄像头来看它们是怎么消失不见的：</p>
+
+<p><img src="http://7xqycx.com1.z0.glb.clouddn.com/2016-06-19-14638245002023.png" alt="" /></p>
+
+<p>下落到 Y 轴边界（图中红线）之下的物体会被清除掉。这样肯定要比让它们一直躺在你的 iPhone 的底部好多了。:]</p>
+
+<h2 id="section-4">接下来怎么办？</h2>
+
+<p>这里是<a href="https://github.com/FangYiXiong/GeometryFighter/archive/part-4-finished.zip">完成后的代码</a>。</p>
+
+<p>就目前而言，您应该继续阅读本系列教程的<a href="http://iOSinit.com/scenekit-05">最后的第五节</a>，在那里，你将学习如何将一些非常酷的粒子效果添加到游戏中，最终完成这个游戏。</p>
+
+<p>本节视频教程：<a href="">地址</a></p>
+
+<blockquote>
+  <p>译者注：如果您刚开始学习 iOS 开发，希望系统地学习并得到及时的指导，可以考虑来购买我的视频教程：<a href="http://iosinit.com/ios-3d-games/">「从零开始」学习 3D iOS游戏编程</a></p>
+</blockquote>
+
+<blockquote>
+  <p>这一教程基于本文提及的<a href="https://www.raywenderlich.com/store/3d-ios-games-by-tutorials">《3D iOS 游戏教程》</a>这本书，将会教给你制作 3D iOS 游戏中所需要知道的一切知识，在这个过程中你将从头开始制作一系列类似于<a href="(https://itunes.apple.com/cn/app/fruit-ninja/id362949845?mt=8)">水果忍者</a>、经典的敲砖块，甚至苹果 WWDC 上和 Apple TV 一起首发的游戏 —— <a href="https://itunes.apple.com/us/app/crossy-road-endless-arcade/id924373886?mt=8">Crossy Road</a>。</p>
+</blockquote>
+
+<blockquote>
+  <p>于此同时，如果您有任何问题，欢迎在微博上 <a href="http://weibo.com/fangyixiong">@方一雄</a> 给我留言或私信。</p>
+</blockquote>
+

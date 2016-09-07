@@ -1,0 +1,108 @@
+<p>原文地址：<a href="http://iOSinit.com/flappybird-06">「从零开始」做一个 FlappyBird 那样的游戏 第6节：检测物体的碰撞</a></p>
+
+<p>相关视频地址：<a href="http://study.163.com/course/introduction/1685005.htm">网易云课堂</a></p>
+
+<p>嗨，大家好，我是方一雄。欢迎大家继续收看<a href="http://study.163.com/course/introduction/1685005.htm">「从零开始」做一个 FlappyBird 那样的游戏</a> 这一系列教学视频。</p>
+
+<p>在本节的视频中，你将会学习如何检测游戏中物体的碰撞。</p>
+
+<h2 id="section">理论讲解</h2>
+
+<hr />
+
+<h3 id="section-1">碰撞检测</h3>
+
+<p>在上节课的视频中，我们已经完成了实现「碰撞检测」的准备工作，那就是给主角、障碍物和地面增加了碰撞体积。现在我们要做的就是告诉系统的物理引擎，当两个物品碰撞的时候，通知我们。这种通知机制在苹果的编程语言中，就叫做<strong>代理（Delegate）</strong>。</p>
+
+<p>那为了实现这个代理，我们首先要遵守一个名叫<code class="highlighter-rouge">SKPhysicsContactDelegate</code>（意思就是系统物理引擎碰撞的代理）的<strong>协议（Protocol）</strong>。然后我们把游戏的<code class="highlighter-rouge">场景</code>本身设置为物理世界(<code class="highlighter-rouge">PhysicsWorld</code>)的代理，这样我们就会在系统的物理引擎检测到碰撞后得到通知。</p>
+
+<p>由于这个课程的目的不是专注于编程知识的讲解，所以如果你不理解这个所谓的「代理」和「协议」是什么，可以暂时先放下，跟着做下来，之后再去查找相关的概念。</p>
+
+<p>这个通知就是我们屏幕上列出来的这个方法，名字叫做<code class="highlighter-rouge">didBeginContact</code>，意思就是开始碰撞。</p>
+
+<p>```
+func didBeginContact(碰撞双方: SKPhysicsContact) {</p>
+
+<p>let 被撞对象 = 碰撞双方.bodyA.categoryBitMask == 物理层.游戏角色 ? 碰撞双方.bodyB : 碰撞双方.bodyA</p>
+
+<p>if 被撞对象.categoryBitMask == 物理层.地面 {
+       撞击了地面 = true
+   }</p>
+
+<p>if 被撞对象.categoryBitMask == 物理层.障碍物 {
+       撞击了障碍物 = true
+   }</p>
+
+<p>}
+```</p>
+
+<p>我们注意到，这个方法中有一个类为<code class="highlighter-rouge">SKPhysicsContact</code>的参数，我们叫它<code class="highlighter-rouge">碰撞双方</code>，它有两个属性<code class="highlighter-rouge">bodyA</code>和<code class="highlighter-rouge">bodyB</code>分别代表发生碰撞的两个物体。</p>
+
+<p>这里有一个棘手的问题是，这里的顺序是不固定的。也就是说，当主角和障碍物发生碰撞的时候，<code class="highlighter-rouge">bodyA</code>可能是<code class="highlighter-rouge">主角</code>，也可能是<code class="highlighter-rouge">障碍物</code>。主角和地面相撞的时候也是同样的情况。</p>
+
+<p>所以第一行代码的意思就是我们要区分主角和它撞到的东西。那因为我们的游戏设计成，要么是主角撞到障碍物，要么是主角撞到地面。所以碰撞的双方中一定有一个是<code class="highlighter-rouge">主角</code>。</p>
+
+<p>所以如果<code class="highlighter-rouge">bodyA</code>的类别是<code class="highlighter-rouge">游戏角色</code>，那它一定是主角，那么<code class="highlighter-rouge">被撞对象</code>一定是<code class="highlighter-rouge">bodyB</code>；反之，那么<code class="highlighter-rouge">bodyB</code>就是主角，那么<code class="highlighter-rouge">bodyA</code>就是<code class="highlighter-rouge">被撞对象</code>。</p>
+
+<p>区分完<code class="highlighter-rouge">主角</code>和<code class="highlighter-rouge">被撞对象</code>之后，我们知道了<code class="highlighter-rouge">被撞对象</code>要不就是<code class="highlighter-rouge">障碍物</code>，要不就是<code class="highlighter-rouge">地面</code>。所以接下来的代码就是要再来分别处理<code class="highlighter-rouge">撞到障碍物</code>和<code class="highlighter-rouge">撞到地面</code>这两种情况了。在这里，我们的做法是分别设置一个布尔值的变量作为标记来代表这两种情况。然后在「游戏更新下一帧」（即<code class="highlighter-rouge">update</code>那个方法）的时候根据不同的情况来做一些相关的事情。</p>
+
+<h3 id="section-2">游戏状态</h3>
+
+<h4 id="section-3">不同的游戏状态：</h4>
+
+<p>在我们进入 Demo 之前还有一件事需要大家理解，那就是「游戏状态」。</p>
+
+<p>我们在编写游戏的时候，通常会把游戏分为不同的状态。截至目前，我们只有一个状态，那就是<code class="highlighter-rouge">游戏</code>状态，在这个状态下，我们的主角在天空不断地飞翔。</p>
+
+<p>那如果我们的主角撞上障碍物之后应该怎么办呢？</p>
+
+<ul>
+  <li>游戏中</li>
+  <li>跌落</li>
+  <li>显示分数</li>
+</ul>
+
+<p>这个时候我们就要切换到一个新的游戏状态，这时主角就会向下坠落，这个状态就叫<code class="highlighter-rouge">跌落</code>。然后当主角落到地面上的时候，我们要再切换一个状态来给玩家显示本次游戏的得分，之后会教大家如何计分，我们这里就先把这个状态叫做<code class="highlighter-rouge">显示分数</code>。</p>
+
+<p>现在的问题是，我们要如何来跟踪这些不同的状态呢？</p>
+
+<p>你可以会想，我可以设置几个布尔值来进行标记，是否跌落，是否撞击了地面等等。这没错，但是因为在之后我们可能还会增加更多的游戏状态，所以使用一个枚举来管理可能是一个更好的方法。</p>
+
+<p>就像这个代码显示的一样，我们把所有可能的游戏状态都列举出来，包括一些我们暂时还用不上的状态。</p>
+
+<p><code class="highlighter-rouge">
+enum 游戏状态 {
+    case 主菜单
+    case 教程
+    case 游戏
+    case 跌落
+    case 显示分数
+    case 结束
+}
+</code></p>
+
+<h4 id="section-4">对于每一个状态</h4>
+
+<p>确定了各个游戏状态之后，我们可以根据不同的游戏状态来组织和优化我们的代码。</p>
+
+<h5 id="section-5">点击屏幕时候有不同的行为</h5>
+
+<p>比如，当用户点击屏幕的时候，如果我们是在「游戏」状态，那跟之前一样，主角要<code class="highlighter-rouge">向上飞一下</code>，但是如果是在「跌落」的状态下，用户再点击屏幕我们就不希望主角再飞了，而是让用户静静地看着主角下落的动画就好了。</p>
+
+<h5 id="section-6">游戏每一帧更新的时候发生不同的事情</h5>
+
+<p>比如，在<code class="highlighter-rouge">update</code>（更新）这个方法中，如果是在「游戏」状态，那就跟之前一毛一样；但是如果是在「跌落」的状态下，我们就不希望前景和障碍物再持续地移动来制造主角向前飞的假象了对吧，因为这时理论上主角已经「死」了，不能前进了。</p>
+
+<p>综上可以看到，根据不同的游戏状态来组织我们的代码是很有帮助的。</p>
+
+<h5 id="section-7">在不同游戏状态间切换的特效</h5>
+
+<p>这样做的另外一个好处在于，当我们在不同的游戏状态间切换的时候，我们可以创建一个「切换到xx状态」的方法来组织我们的代码，逻辑会更清晰。</p>
+
+<p>比如，当我们的主角撞到障碍物的时候，我们要切换到「跌落」的状态，那我们就可以写一个名叫<code class="highlighter-rouge">切换到跌落状态()</code>这样的方法，在这个方法里，我们首先把当前游戏状态改为「跌落」，然后我们可能想播放一个跌落的声音来告诉玩家发生了什么，那我们就可以把这个切换相关的代码都写在下面。</p>
+
+<p>用这种方式组织代码逻辑会非常清晰，既方便阅读也更易于日后的维护，在我们的示范中就会采用这种方式。</p>
+
+<h2 id="demo-">Demo 演示</h2>
+
+<p>图文 TODO，请先参考相关视频（）</p>
