@@ -27,7 +27,7 @@ blog_button:
 nav:
     - {title: 视频, description: Videos, url: 'http://'}
     - {title: 项目, description: My Project, url: 'http://project.iosinit.com'}
-    - {title: 关于, description: A button, url: 'http://about.iosinit.com'}
+    - {title: 关于, description: AboutMe, url: 'http://about.iosinit.com'}
 
 # Pagination
 gems: [jekyll-paginate]
@@ -36,7 +36,7 @@ paginate_path: "page/:num/"
 
 # Comment
 comment:
-    disqus: vno-jekyll
+    # disqus: vno-jekyll
     # duoshuo: 
     
 # Social
@@ -49,5 +49,5 @@ social:
 
 # Google Analytics
 ga:
-    # id: your_ga_id
-    # host: your_host
+    id: UA-84472623-1
+    host: auto
