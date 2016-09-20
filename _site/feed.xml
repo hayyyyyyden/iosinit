@@ -5,8 +5,8 @@
     <description>嗨，我是方一雄，这是我的 iOS 视频教程小站，欢迎您的光临。</description>
     <link>http://vno.onevcat.com/</link>
     <atom:link href="http://vno.onevcat.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 20 Sep 2016 13:34:58 +0800</pubDate>
-    <lastBuildDate>Tue, 20 Sep 2016 13:34:58 +0800</lastBuildDate>
+    <pubDate>Tue, 20 Sep 2016 14:01:05 +0800</pubDate>
+    <lastBuildDate>Tue, 20 Sep 2016 14:01:05 +0800</lastBuildDate>
     <generator>Jekyll v3.1.1</generator>
     
       <item>
@@ -30,6 +30,8 @@
 &lt;p&gt;然而这次把博客迁移到 Jekyll 的过程中，我又有了新的体悟。其实有的时候不是作者不想写清楚，而是他在制作这个教程的时候确实没有遇到这个问题，比如版本的更新问题，当时没问题，但是现在有问题了等等。有的时候这种问题甚至连视频教程也解决不了，唯一能解决的办法就是线下一对一的教学了吧，当然那个成本就太高了。但有的时候这可能真的是唯一的解决之道。&lt;/p&gt;
 
 &lt;p&gt;嗯，现在在想要不要做一个线下的&lt;strong&gt;如何使用 Jekyll 来写博客&lt;/strong&gt;的沙龙活动……&lt;/p&gt;
+
+&lt;p&gt;更新 2016/09/20：开了一期的&lt;strong&gt;如何使用 Jekyll 来写博客&lt;/strong&gt;活动，虽然只有一个同学来参见，还是很开心看到他建立了自己的网站。但在过程中也发现了一些问题，比如应该让大家提前做一些准备啊，实际操作的时间还是比预计的要超出很多，还会有很多临时出现的状况。&lt;/p&gt;
 </description>
         <pubDate>Sun, 04 Sep 2016 22:15:44 +0800</pubDate>
         <link>http://vno.onevcat.com/2016/09/migrate-to-jekyll/</link>
